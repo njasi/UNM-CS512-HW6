@@ -1,0 +1,253 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <title>UNM CS 512 Hw6</title>
+  <!-- load styles from common -->
+  <link href="./common/styles.css" rel="stylesheet" />
+  <link href="./common/navbar.css" rel="stylesheet" />
+  <script defer src="./common/navbar.js"></script>
+
+
+  <!-- project specific script & style -->
+  <script defer src="./dist/bundle.js"></script>
+  <link href="./public/bs5.css" rel="stylesheet" />
+
+  <style>
+    figure {
+      margin: 0;
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background-color: var(--surface);
+    }
+
+    figcaption {
+      text-align: center;
+      margin-top: 0.5em;
+      color: var(--muted)
+    }
+
+    .double-img .img-fluid {
+      width: 70%;
+    }
+  </style>
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-surface">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="/">UNM CS 512</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
+        aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNavDropdown">
+        <ul class="navbar-nav">
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
+              data-bs-toggle="dropdown" aria-expanded="false">
+              Homework
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink" id="dropdown-homework"></ul>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
+              data-bs-toggle="dropdown" aria-expanded="false">
+              Side Projects
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink" id="dropdown-projects"></ul>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <main>
+    <h1>HW 6: unnamed</h1>
+    <div class="sourcecode">
+      <a href="https://github.com/njasi/UNM-CS512-HW6">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-github"
+          viewBox="0 0 16 16">
+          <path
+            d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8" />
+        </svg>
+        HW6 Source
+      </a>
+
+      <a href="https://github.com/njasi/UNM-CS512-PotatoEngine/tree/6c21c230cd6c5b31ed132aad77c6eca2a0b195d8">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-github"
+          viewBox="0 0 16 16">
+          <path
+            d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8" />
+        </svg>
+        PotatoEngine Source (at the time of HW6 completion)
+      </a>
+    </div>
+    <p>
+      In this assignment one of my primary goals was to replicate the "cartoon" water material found in "The Legend of
+      Zelda: The Wind Waker".
+      The stylized elements in this game have always been a favorite of mine, so I jumped at the chance presented here.
+    </p>
+    <p>
+      Additionally I (plan on) implementing a shadow render pass setup to achieve simple shadows without raytracing.
+    </p>
+    <div id="demo">
+      <div class="canvas-wrapper" style="display: flex; justify-content: center">
+        <canvas id="glcanvas" width="1600" height="900"></canvas>
+        <div id="loader-wrapper" class="show">
+          <div class="spinner"></div>
+        </div>
+      </div>
+
+      <div class="controls">
+
+      </div>
+    </div>
+    <p>Controls and some things to try:</p>
+    <ul>
+      <li>
+        Rotate the scene with your mouse.
+      </li>
+    </ul>
+
+    <h2>What are render passes?</h2>
+    <p>
+      Essentially render passes group objects based on their rendering properties, for example objects could be grouped
+      into transparent and opaque (although this can easily be achieved in the same shader with alpha values).
+
+      In the example of a transparent render pass, before we begin rendering the objects in this pass we enable
+      blending and disable the depth mask. then after we have finished running we reset them back to their defaults.
+      Therefore another render pass can work without interference. Below is a snippet showing the <code>setup</code> and
+      <code>cleanup</code> procedures which set and reset the
+      properties described in my transparent pass.
+    </p>
+    <pre>
+setup: (gl) => {
+  gl.enable(gl.BLEND);
+  gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+  gl.depthMask(false);
+},
+cleanup: (gl) => {
+  gl.depthMask(true);
+  gl.disable(gl.BLEND);
+},
+    </pre>
+
+
+    <h2>How does the water material work?</h2>
+    <p>
+      A short breakdown of how the process works in The Wind Waker is provided in this video:
+      <a href="https://www.youtube.com/watch?v=8NL9C05CYk">How Wind Waker Builds Its Water Materials</a>.
+      I follow much of the same steps, although it's worth noting that the displacement map in Wind Waker does not
+      appear to be an actual texture as shown in the video, but a combination of sine waves calculated at runtime.
+      At the very least I was unable to find a displacement map texture after decompiling my copy of the game, but
+      noted some sine wave offset calculations.
+    </p>
+
+    <h3>
+      Where is the water foam texture from?
+    </h3>
+    <p>
+      The foam texture I'm using is from a decompilation of my copy of The Wind Waker. This should fall within fair use
+      best I can tell. Nintendo if you want to copyright strike my homework feel free to do so thanks.
+    </p>
+
+
+    <h3>Colors tm</h3>
+    <div class="row">
+      <p class="col-8">
+        TODO: the exact layering mechanism needs to be figured out, think i need lighten two layers (foam and shadow
+        foam) and then decide how i want to remap grayscale colors.
+      </p>
+      <figure class="col-4 col-xs-12">
+        <img class="img-fluid" src="">
+        <figcaption>
+          Placeholder
+        </figcaption>
+      </figure>
+    </div>
+
+    <h3>Displacement Map</h3>
+    <div class="row">
+      <section class="col-8">
+        <p>
+          The newly created layered albedo texture is now influenced by a displacement map. When a pixel in a
+          displacement map is white the albedo texture UV is shifted up and to the right, when it is black the UV is
+          shifted down and to the left. Then to make the sea foam appear as if it is moving, we simply scroll the
+          displacement map texture over time. This leaves us with a fairly complete water texture.
+        </p>
+        <p>
+          The wave displacement texture I use in this assignment is a composition of multiple sin waves with an
+          additional sin wave shifting the phase to produce the side to side waves. this is fairly similar to the
+          texture seen in the video and I'm pretty happy with the effect, although it would be nice to add some
+          additional noise into the texture or put a little more thought into the pattern later.
+        </p>
+      </section>
+      <div class="col-4 col-xs-12">
+        <figure>
+          <div class="d-flex double-img">
+            <img class="img-fluid" src="./public/wave_displacement.png">
+            <img class="img-fluid" src="./public/wave_displacement2.png">
+          </div>
+          <figcaption>Left: My wave displacement map. Right: Wind Waker displacement map. (appears to have one major
+            sine
+            wave phase peak and then a mirroring or absolute value effect causing the sharp point in the middle)
+          </figcaption>
+        </figure>
+      </div>
+    </div>
+
+    <h3>Mipmapping</h3>
+    <div class="row">
+
+      <section class="col-8">
+        <p>TODO finish the feature in potato engine</p>
+        <p>
+          We covered automatic mipmapping in class which helps us save on compute power, but The Wind Waker leverages
+          this feature to achieve a fading effect for "free". In order to make the water texture fade away low
+          resolution mipmap levels slowly become pure black without the foam texture, effectively fading it away in the
+          distance.
+        </p>
+        <p>
+          It's also worth noting that this mipmap fading effect is based on the resolution of the screen its being
+          rendered on as this changes when the smallest pure black maps will be used. This is noticeable if we change
+          the scale of the rendering canvas: a larger canvas will show patterns further into the distance than a smaller
+          one.
+        </p>
+      </section>
+      <figure class="col-4 col-xs-12">
+        <img class="img-fluid" src="./public/mipmap.png">
+        <figcaption>
+          Mipmap shown in the <a href="https://www.youtube.com/watch?v=8NL9C05CYk">linked video</a>, note the
+          foam fading away to pure black at low resolution.
+        </figcaption>
+      </figure>
+    </div>
+
+    <h3>Vertex Shader</h3>
+    <p>
+      Honestly the related vertex shader is not that interesting, as it is something that could come out of a HW3.
+      Basically it consists of multiple composed sin waves that contribute to the height at a given vertex.
+    </p>
+
+    <pre>
+<span style="color:var(--muted)">// composition of waves to make natural ish looking water</span>
+float yWave = uPosition.y;
+yWave += 1.f * sin(2.0f * 3.14159f - uTime / 20.f);
+yWave += 0.3f * sin(dot(aPosition.xz, normalize(vec2(0.5f, 1))) * 2.0f * 3.14159f / 20.f - uTime / 2.f);
+yWave += 0.2f * sin(dot(aPosition.xz, normalize(vec2(-.4f, .3f))) * 2.0f * 3.14159f / 15.f - uTime);
+
+<span style="color:var(--muted)">// plug the updated y value into the translation...</span>
+mat4 T = translate3D(uPosition.x, yWave, uPosition.z);
+    </pre>
+
+    <h2>Conclusions</h2>
+    <p>
+      Textures are quite fun to work with...
+    </p>
+  </main>
+</body>
+
+</html>
