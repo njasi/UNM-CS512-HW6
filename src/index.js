@@ -17,8 +17,8 @@ import { TexturedMaterial } from "PotatoEngine/src/materials";
 import { rgb } from "PotatoEngine/src/util/color";
 
 const scene = new Scene("glcanvas");
-scene.camera.move(0, -1, 0);
-scene.rotationX += Math.PI / 8;
+scene.camera.move(0, -5, 0);
+scene.camera.pitch -= Math.PI / 8;
 
 /**
  * Add the basic lights to the scene
@@ -50,11 +50,17 @@ function attachListeners() {
   // TODO decide on interactivity with the scene
 }
 
+
+
+controls.FlightControls.setupMouseControls(scene);
+const flightCb = controls.FlightControls.setupKeyboardControls(scene);
 /**
  * Update the scene
  * @param {number} dt time change since last update in ms
  */
 function updateScene(dt) {
+  flightCb(dt)
+
   this.getMaterial(MATERIAL_SEA).setTextureExtraUniform(
     TexturedMaterial.TEXTURE_TYPE_DISPLACEMENT,
     "uDisplacementV",
@@ -77,8 +83,6 @@ async function main() {
 
   initSceneObjects();
 
-  controls.BasicControls.setupMouseControls(scene);
-  controls.BasicControls.setupKeyboardControls(scene);
   attachListeners();
 
   setInterval(() => {

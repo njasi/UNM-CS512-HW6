@@ -1,5 +1,9 @@
 import { Scene } from "PotatoEngine";
-import { common, TexturedMaterial } from "PotatoEngine/src/materials";
+import {
+  common,
+  TextureColorRamp,
+  TexturedMaterial,
+} from "PotatoEngine/src/materials";
 import { rgb } from "PotatoEngine/src/util/color";
 import { PhongShaderProgram } from "PotatoEngine/src/shaders";
 
@@ -8,6 +12,7 @@ export const SHADER_PROGRAM_WATER = "phong_water";
 
 export const TEXTURE_SEA = "sea";
 export const TEXTURE_SEA_DISPLACEMENT = "sea_displacement";
+export const TEXTURE_FOAM_COLOR_RAMP = "foam_color_ramp";
 
 export const MATERIAL_SEA = "sea";
 
@@ -17,6 +22,7 @@ export const colors = {
   steel: rgb(206, 210, 215),
   wood: rgb(218, 109, 66),
   water: rgb(1, 113, 187),
+  waterDark: rgb(0, 100, 167),
 };
 
 /**
@@ -46,12 +52,17 @@ export function addShaders(scene) {
 export function addTextures(scene) {
   scene.createTexture(
     TEXTURE_SEA_DISPLACEMENT,
-    "./public/wave_displacement.png",
+    "./public/wave_displacement2.png",
   );
   scene.createTexture(TEXTURE_SEA, "./public/sea.png", {
     wrapS: true,
     wrapT: true,
   });
+
+  scene.addTexture(
+    TEXTURE_FOAM_COLOR_RAMP,
+    new TextureColorRamp(scene.gl, colors.water, colors.waterDark),
+  );
 
   // if (window.location.host == "localhost:8080") {
   //   document.getElementById("test-video-texture").src =
@@ -72,6 +83,12 @@ export function addMaterials(scene) {
     [TexturedMaterial.TEXTURE_TYPE_ALBEDO]: {
       textureLabel: TEXTURE_SEA,
       extraUniforms: {
+        [TexturedMaterial.U_TILE]: [7, 7],
+      },
+    },
+    [TexturedMaterial.TEXTURE_TYPE_ALBEDO2]: {
+      textureLabel: TEXTURE_SEA,
+      extraUniforms: {
         [TexturedMaterial.U_TILE]: [12, 12],
       },
     },
@@ -81,6 +98,9 @@ export function addMaterials(scene) {
         uDisplacementStrength: 0.1,
         [TexturedMaterial.U_TILE]: [3, 3],
       },
+    },
+    [TexturedMaterial.TEXTURE_TYPE_COLOR_RAMP]: {
+      textureLabel: TEXTURE_FOAM_COLOR_RAMP,
     },
   });
 
