@@ -13,12 +13,12 @@ In this assignment, you are expected to create objects with texture mapping. You
         - TODO: cylinder, ngonprisms
 
 2. Textures with Animations (2pts)
-    - [] At least one of the textures has animation (e.g. GIF, video) (can be one of the above three textures)
+    - [ ] At least one of the textures has animation (e.g. GIF, video) (can be one of the above three textures)
         - This is implemented, but I'm not sure where to put it in my HW6 scene.
 
 3. Bump/Normal Mapping (4pts)
-    - [] Implement at least one additional normal mapping (you can use the existing brick texture or any texture you like, it can be one of the three objects in task 1)
-    - [] Implement at least one additional bump mapping (you can use the existing brick texture or any texture you like, it can be one of the three objects in task 1)
+    - [o] Implement at least one additional normal mapping (you can use the existing brick texture or any texture you like, it can be one of the three objects in task 1)
+    - [o] Implement at least one additional bump mapping (you can use the existing brick texture or any texture you like, it can be one of the three objects in task 1)
     
     These are both implemented for all textured primitives, but i need to place them into the scene.
 
@@ -31,10 +31,29 @@ In this assignment, you are expected to create objects with texture mapping. You
     Your homework must be hosted on GitHub Pages (or another hosting service) so we can run it directly. Please submit the GitHub Pages link that opens your scene right away, not the link to your GitHub repository.
 
 
+## Files of interest to the grader
+- Texture management: 
+    - [PotatoEngine/src/materials/TexturedMaterial.js](https://github.com/njasi/UNM-CS512-PotatoEngine/blob/main/src/materials/TexturedMaterial.js)
+    - [PotatoEngine/src/materials/Texture2D.js](https://github.com/njasi/UNM-CS512-PotatoEngine/blob/main/src/materials/Texture2D.js)
+    - [PotatoEngine/src/Scene.js](https://github.com/njasi/UNM-CS512-PotatoEngine/blob/main/src/Scene.js#L486)
+- Primitives (tangents & texCoords):
+    - [PotatoEngine/src/objects/primitives.js](https://github.com/njasi/UNM-CS512-PotatoEngine/blob/main/src/objects/primitives.js)
+- Shaders: 
+    - [src/waterPhongTextured.vert](./src/waterPhongTextured.vert)
+    - [PotatoEngine/src/shaders/vertex/phongTextured.vert](https://github.com/njasi/UNM-CS512-PotatoEngine/blob/main/src/shaders/vertex/phongTextured.vert)
+    - [PotatoEngine/src/shaders/fragment/phongTextured.frag](https://github.com/njasi/UNM-CS512-PotatoEngine/blob/main/src/shaders/fragment/phongTextured.frag)
+
 ## Development
 
 ```sh
 npm i
 npm i ./PotatoEngine
 npm run start
+```
+
+## Production Build
+```sh
+git checkout gh-pages
+rm -rf ./dist
+npm run build
 ```
