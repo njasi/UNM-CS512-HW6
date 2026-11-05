@@ -95,7 +95,7 @@ export function addMaterials(scene) {
     [TexturedMaterial.TEXTURE_TYPE_DISPLACEMENT]: {
       textureLabel: TEXTURE_SEA_DISPLACEMENT,
       extraUniforms: {
-        uDisplacementStrength: 0.1,
+        uDisplacementStrength: 0.3,
         [TexturedMaterial.U_TILE]: [3, 3],
       },
     },

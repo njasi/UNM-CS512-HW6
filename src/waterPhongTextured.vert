@@ -167,11 +167,12 @@ mat4 translate3D(float tx, float ty, float tz) {
 }
 
 void main() {
+  float waveAmplitude = 1.5f;
   float yWave = uPosition.y;
   // composition of waves to make natural ish looking water
-  yWave += 1.f * sin(2.0f * 3.14159f - uTime / 20.f);
-  yWave += 0.3f * sin(dot(aPosition.xz, normalize(vec2(0.5f, 1))) * 2.0f * 3.14159f / 20.f - uTime / 2.f);
-  yWave += 0.2f * sin(dot(aPosition.xz, normalize(vec2(-.4f, .3f))) * 2.0f * 3.14159f / 15.f - uTime);
+  yWave += waveAmplitude * 1.f * sin(2.0f * 3.14159f - uTime / 20.f);
+  yWave += waveAmplitude * 0.3f * sin(dot(aPosition.xz, normalize(vec2(0.5f, 1))) * 2.0f * 3.14159f / 20.f - uTime / 2.f);
+  yWave += waveAmplitude * 0.2f * sin(dot(aPosition.xz, normalize(vec2(-.4f, .3f))) * 2.0f * 3.14159f / 15.f - uTime);
 
   mat4 T = translate3D(uPosition.x, yWave, uPosition.z);
   mat4 S = scaling3D(uScale.x, uScale.y, uScale.z);

@@ -108,7 +108,15 @@
     <p>Controls and some things to try:</p>
     <ul>
       <li>
-        Rotate the scene with your mouse.
+        Rotate the camera by drag clicking your mouse on the canvas.
+      </li>
+      <li>
+        Move in the horizontal plane with <code>WASD</code>, and on the vertical axis with <code>Space</code> and
+        <code>Shift</code>
+      </li>
+      <li>
+        Increase / Decrease the fov with <code>-</code> and <code>+</code> (= key no shifting). Reset the fov with
+        <code>0</code>.
       </li>
     </ul>
 
@@ -134,44 +142,91 @@ cleanup: (gl) => {
   gl.disable(gl.BLEND);
 },
     </pre>
-
-
     <h2>How does the water material work?</h2>
     <p>
       A short breakdown of how the process works in The Wind Waker is provided in this video:
-      <a href="https://www.youtube.com/watch?v=8NL9C05CYk">How Wind Waker Builds Its Water Materials</a>.
+      <a href="https://www.youtube.com/watch?v=8NL9Cc05CYk">How Wind Waker Builds Its Water Materials</a>.
       I follow much of the same steps, although it's worth noting that the displacement map in Wind Waker does not
       appear to be an actual texture as shown in the video, but a combination of sine waves calculated at runtime.
       At the very least I was unable to find a displacement map texture after decompiling my copy of the game, but
       noted some sine wave offset calculations.
     </p>
-
-    <h3>
-      Where is the water foam texture from?
-    </h3>
-    <p>
-      The foam texture I'm using is from a decompilation of my copy of The Wind Waker. This should fall within fair use
-      best I can tell. Nintendo if you want to copyright strike my homework feel free to do so thanks.
-    </p>
-
-
-    <h3>Colors tm</h3>
     <div class="row">
-      <p class="col-8">
-        TODO: the exact layering mechanism needs to be figured out, think i need lighten two layers (foam and shadow
-        foam) and then decide how i want to remap grayscale colors.
-      </p>
-      <figure class="col-4 col-xs-12">
-        <img class="img-fluid" src="">
-        <figcaption>
-          Placeholder
-        </figcaption>
-      </figure>
+      <section class="col-12 col-sm-8">
+        <h3>
+          Where is the water foam texture from?
+        </h3>
+        <p>
+          The foam texture I'm using is from a decompilation of my copy of The Wind Waker. This should fall within fair
+          use
+          best I can tell. Nintendo if you want to copyright strike my homework feel free to do so thanks.
+        </p>
+        <h3>Albedo Texture Creation</h3>
+        <p>
+          First let us think about the main albedo (color) texture map for the ocean surface material. The Wind Waker
+          has a singular foam texture consisting of a grayscale tillable cell like structure. One could implement a
+          similar texture as a procedural material using cellular noise; In fact I tried this at first but it didn't
+          look quite as good. The original image consists of 16 shades from white to black.
+        </p>
+      </section>
+      <div class="col-12 col-sm-4">
+        <figure>
+          <div class="d-flex double-img">
+            <img class="img-fluid" src="./public/sea.png">
+            <img class="img-fluid" src="./public/albedo_layers.png">
+          </div>
+          <figcaption>
+            Left: the foam texture image. Right: The layered texture using lighten between the foam texture image (white
+            lines) and the color ramped foam texture image (darker blue lines and blue background)
+          </figcaption>
+        </figure>
+      </div>
     </div>
+    <div class="row">
+      <section class="col-12 col-sm-8">
+        <h4>Color Ramping</h4>
+        <p>
+          Now in most scenes we would not be happy with our completely black and white water texture, so a color ramp
+          texture is used to map the grayscale values to rgb values. A color ramp texture generally consists of a strip
+          of pixels 1 pixel tall and as wide as the highest value of your grayscale image (256 pixels wide in our case).
+          When rendering the grayscale texture the shader can then look up the rgb color corresponding to the grayscale
+          value (sometimes this value is only in one channel, generally the .r channel it seems, but in our case with
+          normal rgb texture images it is common to use the <a
+            href="https://en.wikipedia.org/wiki/Grayscale#Luma_coding_in_video_systems">luminance</a> instead.). In The
+          Wind Waker this ramp consists of 16 shades going from a dark ocean color to the main ocean color. Different
+          times of day or weather will change this color ramp at runtime allowing a more dynamic environment. This is
+          especially important ads the water itself is not subject to lighting effects in the same way as other objects
+          are. I've emulated this setup with a <a
+            href="https://github.com/njasi/UNM-CS512-PotatoEngine/blob/main/src/materials/TextureColorRamp.js">color
+            ramp texture that can be easily updated</a> based on the colors at the start and end of the gradient. Now
+          something interesting here is that a color ramp does not need to be a gradient, you could assign completely
+          random color palettes if you wanted. Although the structure is different this is the essence of color pallets
+          in retro arcade games.</p>
+      </section>
+      <div class="col-12 col-sm-4">
+        <figure>
+          <div class="d-flex">
+            <img class="img-fluid" src="./public/color_ramp.png">
+          </div>
+          <figcaption>
+            An example color ramp if we wanted to map the black pixels to our ocean color and the pure white to white,
+            with a linear gradient between them to make the edges smoother. Note that the color ramp used in this
+            assignment is from the ocean blue to a slightly darker blue, but this is not as visible...
+          </figcaption>
+        </figure>
+      </div>
+    </div>
+
+
+    <h4>Layering</h4>
+    <p>
+      You may have noticed that the water texture actually has two instances of the foam pattern, one where the lines
+      are all white and then a shadow
+    </p>
 
     <h3>Displacement Map</h3>
     <div class="row">
-      <section class="col-8">
+      <section class="col-12 col-sm-6">
         <p>
           The newly created layered albedo texture is now influenced by a displacement map. When a pixel in a
           displacement map is white the albedo texture UV is shifted up and to the right, when it is black the UV is
@@ -185,15 +240,18 @@ cleanup: (gl) => {
           additional noise into the texture or put a little more thought into the pattern later.
         </p>
       </section>
-      <div class="col-4 col-xs-12">
+      <div class="col-12 col-sm-6">
         <figure>
           <div class="d-flex double-img">
             <img class="img-fluid" src="./public/wave_displacement.png">
             <img class="img-fluid" src="./public/wave_displacement2.png">
+            <img class="img-fluid" src="./public/albedo_layers_displacement.png">
           </div>
-          <figcaption>Left: My wave displacement map. Right: Wind Waker displacement map. (appears to have one major
-            sine
-            wave phase peak and then a mirroring or absolute value effect causing the sharp point in the middle)
+          <figcaption>
+            Left: My wave displacement map. Middle: Wind Waker displacement map. (appears to have one major sine wave
+            phase peak and then a mirroring or absolute value effect causing the sharp point in the middle). Right:
+            Our layered color texture with the displacement map applied (at a higher strength than in the demo to be
+            more visible)
           </figcaption>
         </figure>
       </div>
@@ -202,7 +260,7 @@ cleanup: (gl) => {
     <h3>Mipmapping</h3>
     <div class="row">
 
-      <section class="col-8">
+      <section class="col-12 col-sm-8">
         <p>TODO finish the feature in potato engine</p>
         <p>
           We covered automatic mipmapping in class which helps us save on compute power, but The Wind Waker leverages
@@ -217,7 +275,7 @@ cleanup: (gl) => {
           one.
         </p>
       </section>
-      <figure class="col-4 col-xs-12">
+      <figure class="col-12 col-sm-4">
         <img class="img-fluid" src="./public/mipmap.png">
         <figcaption>
           Mipmap shown in the <a href="https://www.youtube.com/watch?v=8NL9C05CYk">linked video</a>, note the
