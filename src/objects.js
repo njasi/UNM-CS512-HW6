@@ -58,4 +58,11 @@ export function initSceneObjects(scene) {
   beach.materialLabel = MATERIAL_SAND;
   scene.addObject(beach, SHADER_PROGRAM_PHONG);
 
+  let ship = generateOBJObject("ship", rgb(255, 255, 255), "pirate_ship");
+  ship.materialLabel = MATERIAL_SHIP;
+  scene.addObject(ship, SHADER_PROGRAM_PHONG);
+  ship.scale = [0.006, 0.006, 0.006];
+  ship.position = [0, -0.5, -30];
+  ship.rotation[1] = Math.PI / 3;
+  console.log(ship);
 }

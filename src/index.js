@@ -17,10 +17,11 @@ import { TexturedMaterial } from "PotatoEngine/src/materials";
 import { rgb } from "PotatoEngine/src/util/color";
 import { attachListeners } from "./inputs";
 import { initSceneObjects } from "./objects";
+import { cacheOBJ } from "PotatoEngine/src/objects/loaders";
 
 const scene = new Scene("glcanvas");
-scene.camera.move(0, -5, 0);
-scene.camera.pitch -= Math.PI / 8;
+scene.camera.move(0, -10, 0);
+scene.camera.pitch -= Math.PI / 12;
 
 /**
  * Add the basic lights to the scene
@@ -62,7 +63,9 @@ async function main() {
 
   scene.setUpdateCB(updateScene);
 
-  await scene.load();
+  await scene.load(async () => {
+    await cacheOBJ("./public/pirate_ship.obj", "pirate_ship");
+  });
 
   initSceneObjects(scene);
 

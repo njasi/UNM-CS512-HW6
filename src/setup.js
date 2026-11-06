@@ -82,6 +82,7 @@ export function addTextures(scene) {
   scene.createTexture(TEXTURE_STONE_NORMAL, "./public/stone_normal.png");
   scene.createTexture(TEXTURE_SAND, "./public/sand.jpg");
   scene.createTexture(TEXTURE_SAND_NORMAL, "./public/sand_normalmap.jpg");
+  scene.createTexture(TEXTURE_SHIP, "./public/Txa_kaizoku.png");
   
   scene.addTexture(
     TEXTURE_FOAM_COLOR_RAMP,
