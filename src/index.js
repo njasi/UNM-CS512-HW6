@@ -4,7 +4,7 @@ import {
   addShaders,
   addTextures,
   colors,
-  MATERIAL_SEA,
+  MATERIAL_SEA_COMPLETE,
   SHADER_PROGRAM_WATER,
 } from "./setup";
 
@@ -15,6 +15,8 @@ import { LIGHT_DIRECTIONAL } from "PotatoEngine/src/lights/Light";
 import controls from "PotatoEngine/src/controls";
 import { TexturedMaterial } from "PotatoEngine/src/materials";
 import { rgb } from "PotatoEngine/src/util/color";
+import { attachListeners } from "./inputs";
+import { initSceneObjects } from "./objects";
 
 const scene = new Scene("glcanvas");
 scene.camera.move(0, -5, 0);
@@ -34,24 +36,8 @@ function addLights() {
 
 let seaObject;
 
-/**
- * Setup the scene
- * @param {string} shader which shader to use
- */
-function initSceneObjects(shader = "phong") {
-  scene.removeObject("seaObject");
-  seaObject = generateGridObject("seaObject", rgb(255, 255, 255), 200, 100);
-  seaObject.materialLabel = MATERIAL_SEA;
-  seaObject.position = [0, 0, 0];
-  scene.addObject(seaObject, SHADER_PROGRAM_WATER);
-}
 
-function attachListeners() {
-  // TODO decide on interactivity with the scene
-}
-
-
-
+// setup controls & listeners
 controls.FlightControls.setupMouseControls(scene);
 const flightCb = controls.FlightControls.setupKeyboardControls(scene);
 /**
@@ -61,7 +47,7 @@ const flightCb = controls.FlightControls.setupKeyboardControls(scene);
 function updateScene(dt) {
   flightCb(dt)
 
-  this.getMaterial(MATERIAL_SEA).setTextureExtraUniform(
+  this.getMaterial(MATERIAL_SEA_COMPLETE).setTextureExtraUniform(
     TexturedMaterial.TEXTURE_TYPE_DISPLACEMENT,
     "uDisplacementV",
     scene.time / 30000,
@@ -81,9 +67,9 @@ async function main() {
 
   await scene.load();
 
-  initSceneObjects();
+  initSceneObjects(scene);
 
-  attachListeners();
+  attachListeners(scene);
 
   setInterval(() => {
     scene.render();

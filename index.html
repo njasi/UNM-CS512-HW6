@@ -30,7 +30,7 @@
       color: var(--muted)
     }
 
-    .double-img .img-fluid {
+    .multi-image .img-fluid {
       width: 70%;
     }
   </style>
@@ -102,10 +102,19 @@
       </div>
 
       <div class="controls">
-
+        <label>
+          Sea Material
+          <select id="sea-material-selector">
+            <option>Complete Sea</option>
+            <option>Raw Foam</option>
+            <option>Foam Shadow</option>
+            <option>Foam Layered</option>
+            <option>Displacement Map</option>
+          </select>
+        </label>
       </div>
     </div>
-    <p>Controls and some things to try:</p>
+    <p>Controls and some things to try <code>(new freecam like camera controls)</code>:</p>
     <ul>
       <li>
         Rotate the camera by drag clicking your mouse on the canvas.
@@ -128,8 +137,7 @@
       In the example of a transparent render pass, before we begin rendering the objects in this pass we enable
       blending and disable the depth mask. then after we have finished running we reset them back to their defaults.
       Therefore another render pass can work without interference. Below is a snippet showing the <code>setup</code> and
-      <code>cleanup</code> procedures which set and reset the
-      properties described in my transparent pass.
+      <code>cleanup</code> procedures which set and reset the properties described in my transparent pass.
     </p>
     <pre>
 setup: (gl) => {
@@ -142,6 +150,16 @@ cleanup: (gl) => {
   gl.disable(gl.BLEND);
 },
     </pre>
+    <p>
+      The shadow render pass <code>(should)</code> works in the same way, just with the addition of a framebuffer. First
+      we render
+      the scene from the perspective of the lights present in an initial pass and create a depth mask. In a second pass
+      we use this depth mask framebuffer to create the shadows; essentially if a fragment is closest to the light its
+      noted in the
+      depth map and does get a shadow, but anything behind it (from the perspective of the light) is not in the depth
+      mask so it gets a shadow cast onto it. <code>(TODO remove after implementation: This is how it should work in
+      theory but I've been struggling to implement it)</code>
+    </p>
     <h2>How does the water material work?</h2>
     <p>
       A short breakdown of how the process works in The Wind Waker is provided in this video:
@@ -158,8 +176,7 @@ cleanup: (gl) => {
         </h3>
         <p>
           The foam texture I'm using is from a decompilation of my copy of The Wind Waker. This should fall within fair
-          use
-          best I can tell. Nintendo if you want to copyright strike my homework feel free to do so thanks.
+          use best I can tell. Nintendo if you want to copyright strike my homework feel free to do so thanks.
         </p>
         <h3>Albedo Texture Creation</h3>
         <p>
@@ -171,7 +188,7 @@ cleanup: (gl) => {
       </section>
       <div class="col-12 col-sm-4">
         <figure>
-          <div class="d-flex double-img">
+          <div class="d-flex multi-image">
             <img class="img-fluid" src="./public/sea.png">
             <img class="img-fluid" src="./public/albedo_layers.png">
           </div>
@@ -182,9 +199,9 @@ cleanup: (gl) => {
         </figure>
       </div>
     </div>
+    <h4>Color Ramping</h4>
     <div class="row">
       <section class="col-12 col-sm-8">
-        <h4>Color Ramping</h4>
         <p>
           Now in most scenes we would not be happy with our completely black and white water texture, so a color ramp
           texture is used to map the grayscale values to rgb values. A color ramp texture generally consists of a strip
@@ -217,13 +234,36 @@ cleanup: (gl) => {
       </div>
     </div>
 
+    <div class="row">
 
-    <h4>Layering</h4>
-    <p>
-      You may have noticed that the water texture actually has two instances of the foam pattern, one where the lines
-      are all white and then a shadow
-    </p>
-
+      <h4>Layering</h4>
+      <p>
+      <section class="col-12 col-sm-6">
+        You may have noticed that the water texture actually has two instances of the foam pattern, one where the lines
+        are all white and then a darker pattern of the same texture, scaled up a bit more. The white foam layer is just
+        our original grayscale texture layered on top of the shadow texture which is made with a color ramp assigning
+        the darker blue to white pixels and the main water color to black. This layering or blending mode is called
+        lighten, as we layer the textures on top of each other and we take the lightest color from the two for every
+        texel. This is why we see no black in the final combined texture, it gets fully replaced with the brighter blue
+        colors. Currently in my implementation I just have two albedo maps in the shader which can be combined (lighten
+        only right now since thats all I needed here), but in an actual engine (based on the hardware limitations) you
+        may have an unlimited number of combinations...
+        </p>
+      </section>
+      <div class="col-12 col-sm-6">
+        <figure>
+          <div class="d-flex multi-image">
+            <img class="img-fluid" src="./public/sea_raw.png">
+            <img class="img-fluid" src="./public/sea_shadow.png">
+            <img class="img-fluid" src="./public/sea_layered.png">
+          </div>
+          <figcaption>
+            Left: The raw foam texture. Middle: The shadow foam lines and base color. Right: The two layers blended with
+            lighten.
+          </figcaption>
+        </figure>
+      </div>
+    </div>
     <h3>Displacement Map</h3>
     <div class="row">
       <section class="col-12 col-sm-6">
@@ -242,7 +282,7 @@ cleanup: (gl) => {
       </section>
       <div class="col-12 col-sm-6">
         <figure>
-          <div class="d-flex double-img">
+          <div class="d-flex multi-image">
             <img class="img-fluid" src="./public/wave_displacement.png">
             <img class="img-fluid" src="./public/wave_displacement2.png">
             <img class="img-fluid" src="./public/albedo_layers_displacement.png">
@@ -259,7 +299,6 @@ cleanup: (gl) => {
 
     <h3>Mipmapping</h3>
     <div class="row">
-
       <section class="col-12 col-sm-8">
         <p>TODO finish the feature in potato engine</p>
         <p>

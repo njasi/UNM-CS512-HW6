@@ -14,7 +14,19 @@ export const TEXTURE_SEA = "sea";
 export const TEXTURE_SEA_DISPLACEMENT = "sea_displacement";
 export const TEXTURE_FOAM_COLOR_RAMP = "foam_color_ramp";
 
-export const MATERIAL_SEA = "sea";
+export const MATERIAL_SEA_COMPLETE = "sea_complete";
+export const MATERIAL_SEA_RAW = "sea_raw";
+export const MATERIAL_SEA_BACKGROUND = "sea_shadow";
+export const MATERIAL_SEA_LAYERED = "sea_layered";
+export const MATERIAL_SEA_DISPLACEMENT = "sea_displacement";
+
+export const SEA_MATERIAL_LIST = [
+  MATERIAL_SEA_COMPLETE,
+  MATERIAL_SEA_RAW,
+  MATERIAL_SEA_BACKGROUND,
+  MATERIAL_SEA_LAYERED,
+  MATERIAL_SEA_DISPLACEMENT,
+];
 
 export const colors = {
   gold: rgb(255, 222, 33),
@@ -79,7 +91,7 @@ export function addTextures(scene) {
  * @param {Scene} scene
  */
 export function addMaterials(scene) {
-  const sea = new TexturedMaterial("sea", {
+  const sea = new TexturedMaterial(MATERIAL_SEA_COMPLETE, {
     [TexturedMaterial.TEXTURE_TYPE_ALBEDO]: {
       textureLabel: TEXTURE_SEA,
       extraUniforms: {
@@ -95,7 +107,7 @@ export function addMaterials(scene) {
     [TexturedMaterial.TEXTURE_TYPE_DISPLACEMENT]: {
       textureLabel: TEXTURE_SEA_DISPLACEMENT,
       extraUniforms: {
-        uDisplacementStrength: 0.3,
+        uDisplacementStrength: 0.1,
         [TexturedMaterial.U_TILE]: [3, 3],
       },
     },
@@ -104,5 +116,58 @@ export function addMaterials(scene) {
     },
   });
 
+  const sea_raw = new TexturedMaterial(MATERIAL_SEA_RAW, {
+    [TexturedMaterial.TEXTURE_TYPE_ALBEDO]: {
+      textureLabel: TEXTURE_SEA,
+      extraUniforms: {
+        [TexturedMaterial.U_TILE]: [12, 12],
+      },
+    },
+  });
+
+  const sea_background = new TexturedMaterial(MATERIAL_SEA_BACKGROUND, {
+    [TexturedMaterial.TEXTURE_TYPE_ALBEDO]: {
+      textureLabel: TEXTURE_SEA,
+      extraUniforms: {
+        [TexturedMaterial.U_TILE]: [7, 7],
+      },
+    },
+    [TexturedMaterial.TEXTURE_TYPE_COLOR_RAMP]: {
+      textureLabel: TEXTURE_FOAM_COLOR_RAMP,
+    },
+  });
+
+  const sea_layered = new TexturedMaterial(MATERIAL_SEA_LAYERED, {
+    [TexturedMaterial.TEXTURE_TYPE_ALBEDO]: {
+      textureLabel: TEXTURE_SEA,
+      extraUniforms: {
+        [TexturedMaterial.U_TILE]: [7, 7],
+      },
+    },
+    [TexturedMaterial.TEXTURE_TYPE_ALBEDO2]: {
+      textureLabel: TEXTURE_SEA,
+      extraUniforms: {
+        [TexturedMaterial.U_TILE]: [12, 12],
+      },
+    },
+    [TexturedMaterial.TEXTURE_TYPE_COLOR_RAMP]: {
+      textureLabel: TEXTURE_FOAM_COLOR_RAMP,
+    },
+  });
+
+  const sea_displacement = new TexturedMaterial(MATERIAL_SEA_DISPLACEMENT, {
+    [TexturedMaterial.TEXTURE_TYPE_ALBEDO]: {
+      textureLabel: TEXTURE_SEA_DISPLACEMENT,
+      extraUniforms: {
+        uDisplacementStrength: 0.3,
+        [TexturedMaterial.U_TILE]: [3, 3],
+      },
+    },
+  });
+
   scene.addMaterial(sea, SHADER_PROGRAM_WATER);
+  scene.addMaterial(sea_raw, SHADER_PROGRAM_WATER);
+  scene.addMaterial(sea_background, SHADER_PROGRAM_WATER);
+  scene.addMaterial(sea_layered, SHADER_PROGRAM_WATER);
+  scene.addMaterial(sea_displacement, SHADER_PROGRAM_WATER);
 }
