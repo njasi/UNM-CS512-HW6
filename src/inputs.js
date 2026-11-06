@@ -1,5 +1,5 @@
 import { Scene } from "PotatoEngine";
-import { SEA_MATERIAL_LIST } from "./setup";
+import { SEA_MATERIAL_LIST } from "./materials";
 import { OBJECT_SEA } from "./objects";
 
 /**

@@ -42,19 +42,14 @@ export function waterLevel(
 
   let yWave = 0;
   yWave += waveAmplitude * 1 * Math.sin(2.0 * PI - time / 20);
-  //   console.log("wave height1:", yWave);
   yWave +=
     waveAmplitude *
     0.3 *
     Math.sin((dot(xz, normalize(vec2(0.5, 1))) * 2.0 * PI) / 20 - time / 2);
-  //   console.log("wave height2:", yWave);
   yWave +=
     waveAmplitude *
     0.2 *
     Math.sin((dot(xz, normalize(vec2(-0.4, 0.3))) * 2.0 * PI) / 15 - time);
 
-  //   console.log("time:", time);
-  //   console.log("position:", position);
-  //   console.log("wave height3:", yWave);
   return yWave;
 }

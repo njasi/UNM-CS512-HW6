@@ -9,7 +9,7 @@ import {
   MATERIAL_STONE,
   SHADER_PROGRAM_PHONG,
   SHADER_PROGRAM_WATER,
-} from "./setup";
+} from "./materials";
 
 import { Scene } from "PotatoEngine";
 import {

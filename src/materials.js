@@ -10,6 +10,7 @@ import {
   ambientOnly,
   metallic,
   vertColor,
+  wood,
 } from "PotatoEngine/src/materials/common";
 
 export const SHADER_PROGRAM_PHONG = "phong";
@@ -23,6 +24,7 @@ export const TEXTURE_SAND_NORMAL = "sand_normal";
 export const TEXTURE_SEA = "sea";
 export const TEXTURE_SEA_DISPLACEMENT = "sea_displacement";
 export const TEXTURE_FOAM_COLOR_RAMP = "foam_color_ramp";
+export const TEXTURE_FOAM_COLOR_RAMP2 = "foam_color_ramp2";
 
 export const TEXTURE_SKY = "sky";
 
@@ -56,9 +58,16 @@ export const colors = {
   wood: rgb(218, 109, 66),
   water: rgb(1, 113, 187),
   waterDark: rgb(0, 100, 167),
-  waterNight: undefined,
-  waterNightDark: undefined,
+  waterFoam: rgb(255, 255, 255),
+  waterNight: rgb(1, 91, 130),
+  waterNightDark: rgb(2, 64, 105),
+  waterFoamNight: rgb(1, 111, 160),
+  globalLightDay: rgb(244, 233, 155),
+  globalLightNight: rgb(255, 248, 222),
 };
+
+let colorRampTexture;
+let colorRampFoamTexture;
 
 /**
  * Add the shader programs to the scene
@@ -104,12 +113,6 @@ export function addTextures(scene) {
     "./public/textures/sand_normalmap.jpg",
   );
   scene.createTexture(TEXTURE_SHIP, "./public/textures/pirate-ship.png");
-
-  scene.addTexture(
-    TEXTURE_FOAM_COLOR_RAMP,
-    new TextureColorRamp(scene.gl, colors.water, colors.waterDark),
-  );
-
   scene.createTexture(
     TEXTURE_SKY,
     document.getElementById("sky-video-texture"),
@@ -118,6 +121,20 @@ export function addTextures(scene) {
       animated: true,
     },
   );
+  colorRampTexture = new TextureColorRamp(
+    scene.gl,
+    colors.water,
+    colors.waterDark,
+    { label: "color ramp1" },
+  );
+  scene.addTexture(TEXTURE_FOAM_COLOR_RAMP, colorRampTexture);
+  colorRampFoamTexture = new TextureColorRamp(
+    scene.gl,
+    rgb(0, 0, 0),
+    colors.waterFoam,
+    { label: "color ramp2" },
+  );
+  scene.addTexture(TEXTURE_FOAM_COLOR_RAMP2, colorRampFoamTexture);
 }
 
 /**
@@ -128,7 +145,10 @@ export function addMaterials(scene) {
   // phong mats
   scene.addMaterial(ambientOnly(MATERIAL_AMBIENT_ONLY), SHADER_PROGRAM_PHONG);
   scene.addMaterial(ambientOnly(MATERIAL_AMBIENT_ONLY), SHADER_PROGRAM_WATER);
-  scene.addMaterial(vertColor(MATERIAL_FLAT), SHADER_PROGRAM_PHONG);
+  scene.addMaterial(
+    wood(MATERIAL_FLAT, rgb(255, 255, 255)),
+    SHADER_PROGRAM_PHONG,
+  );
   scene.addMaterial(
     metallic(MATERIAL_SHINY, rgb(255, 255, 255)),
     SHADER_PROGRAM_PHONG,
@@ -157,6 +177,9 @@ export function addMaterials(scene) {
     },
     [TexturedMaterial.TEXTURE_TYPE_COLOR_RAMP]: {
       textureLabel: TEXTURE_FOAM_COLOR_RAMP,
+    },
+    [TexturedMaterial.TEXTURE_TYPE_COLOR_RAMP2]: {
+      textureLabel: TEXTURE_FOAM_COLOR_RAMP2,
     },
   });
 
@@ -263,4 +286,22 @@ export function addMaterials(scene) {
   scene.addMaterial(sand, SHADER_PROGRAM_PHONG);
   scene.addMaterial(ship, SHADER_PROGRAM_PHONG);
   scene.addMaterial(sky, SHADER_PROGRAM_PHONG);
+}
+
+/**
+ * Update the color ramp texture with new start and end
+ * @param {rgb} colorShadow
+ * @param {rgb} colorBackground
+ * @param {TextureColorRamp} [ramp=colorRampTexture]
+ * @param {TextureColorRamp} [foamRamp=colorRampFoamTexture]
+ */
+export function setWaterColorRamp(
+  colorShadow,
+  colorBackground,
+  colorFoam,
+  ramp = colorRampTexture,
+  foamRamp = colorRampFoamTexture,
+) {
+  ramp.setColors(colorBackground, colorShadow);
+  foamRamp.setColors(rgb(0, 0, 0), colorFoam);
 }
