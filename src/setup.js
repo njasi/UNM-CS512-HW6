@@ -10,10 +10,18 @@ import { PhongShaderProgram } from "PotatoEngine/src/shaders";
 export const SHADER_PROGRAM_PHONG = "phong";
 export const SHADER_PROGRAM_WATER = "phong_water";
 
+export const TEXTURE_SHIP = "ship";
+export const TEXTURE_STONE = "stone";
+export const TEXTURE_STONE_NORMAL = "stone_normal";
+export const TEXTURE_SAND = "sand";
+export const TEXTURE_SAND_NORMAL = "sand_normal";
 export const TEXTURE_SEA = "sea";
 export const TEXTURE_SEA_DISPLACEMENT = "sea_displacement";
 export const TEXTURE_FOAM_COLOR_RAMP = "foam_color_ramp";
 
+export const MATERIAL_SHIP = "ship";
+export const MATERIAL_STONE = "stone";
+export const MATERIAL_SAND = "sand";
 export const MATERIAL_SEA_COMPLETE = "sea_complete";
 export const MATERIAL_SEA_RAW = "sea_raw";
 export const MATERIAL_SEA_BACKGROUND = "sea_shadow";
@@ -70,7 +78,11 @@ export function addTextures(scene) {
     wrapS: true,
     wrapT: true,
   });
-
+  scene.createTexture(TEXTURE_STONE, "./public/stone.png");
+  scene.createTexture(TEXTURE_STONE_NORMAL, "./public/stone_normal.png");
+  scene.createTexture(TEXTURE_SAND, "./public/sand.jpg");
+  scene.createTexture(TEXTURE_SAND_NORMAL, "./public/sand_normalmap.jpg");
+  
   scene.addTexture(
     TEXTURE_FOAM_COLOR_RAMP,
     new TextureColorRamp(scene.gl, colors.water, colors.waterDark),
@@ -165,9 +177,52 @@ export function addMaterials(scene) {
     },
   });
 
+  const stone = new TexturedMaterial(MATERIAL_STONE, {
+    [TexturedMaterial.TEXTURE_TYPE_ALBEDO]: {
+      textureLabel: TEXTURE_STONE,
+      extraUniforms: {
+        [TexturedMaterial.U_TILE]: [3, 3],
+      },
+    },
+    [TexturedMaterial.TEXTURE_TYPE_NORMAL]: {
+      textureLabel: TEXTURE_STONE_NORMAL,
+      extraUniforms: {
+        [TexturedMaterial.U_NORMAL_SCALE]: -0.5,
+        [TexturedMaterial.U_TILE]: [3, 3],
+      },
+    },
+  });
+
+  const sand = new TexturedMaterial(MATERIAL_SAND, {
+    [TexturedMaterial.TEXTURE_TYPE_ALBEDO]: {
+      textureLabel: TEXTURE_SAND,
+      extraUniforms: {
+        [TexturedMaterial.U_TILE]: [16,16],
+      },
+    },
+    [TexturedMaterial.TEXTURE_TYPE_NORMAL]: {
+      textureLabel: TEXTURE_SAND_NORMAL,
+      extraUniforms: {
+        [TexturedMaterial.U_NORMAL_SCALE]: 1,
+        [TexturedMaterial.U_TILE]: [16,16],
+      },
+    },
+  });
+
+
+  const ship = new TexturedMaterial(MATERIAL_SHIP, {
+    [TexturedMaterial.TEXTURE_TYPE_ALBEDO]: {
+      textureLabel: TEXTURE_SHIP,
+    }
+  });
+
   scene.addMaterial(sea, SHADER_PROGRAM_WATER);
   scene.addMaterial(sea_raw, SHADER_PROGRAM_WATER);
   scene.addMaterial(sea_background, SHADER_PROGRAM_WATER);
   scene.addMaterial(sea_layered, SHADER_PROGRAM_WATER);
   scene.addMaterial(sea_displacement, SHADER_PROGRAM_WATER);
+
+  scene.addMaterial(stone, SHADER_PROGRAM_PHONG);
+  scene.addMaterial(sand, SHADER_PROGRAM_PHONG);
+  scene.addMaterial(ship, SHADER_PROGRAM_PHONG);
 }

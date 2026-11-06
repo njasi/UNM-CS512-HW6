@@ -28,14 +28,11 @@ scene.camera.pitch -= Math.PI / 8;
 function addLights() {
   const globalLight = new Light("globalLight", [0, 0, 0], {
     type: LIGHT_DIRECTIONAL,
-    direction: [0, -1, 0],
+    direction: [-0.5, -1, -0.5],
     intensity: 1,
   });
   scene.addLight(globalLight);
 }
-
-let seaObject;
-
 
 // setup controls & listeners
 controls.FlightControls.setupMouseControls(scene);
@@ -45,7 +42,7 @@ const flightCb = controls.FlightControls.setupKeyboardControls(scene);
  * @param {number} dt time change since last update in ms
  */
 function updateScene(dt) {
-  flightCb(dt)
+  flightCb(dt);
 
   this.getMaterial(MATERIAL_SEA_COMPLETE).setTextureExtraUniform(
     TexturedMaterial.TEXTURE_TYPE_DISPLACEMENT,
