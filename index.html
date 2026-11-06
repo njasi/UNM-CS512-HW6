@@ -127,6 +127,9 @@
         Increase / Decrease the fov with <code>-</code> and <code>+</code> (= key no shifting). Reset the fov with
         <code>0</code>.
       </li>
+      <li>
+        View the different layers of the sea material with the <code>Sea Material</code> selector.
+      </li>
     </ul>
 
     <h2>What are render passes?</h2>
@@ -189,8 +192,8 @@ cleanup: (gl) => {
       <div class="col-12 col-sm-4">
         <figure>
           <div class="d-flex multi-image">
-            <img class="img-fluid" src="./public/sea.png">
-            <img class="img-fluid" src="./public/albedo_layers.png">
+            <img class="img-fluid" src="./public/examples/sea.png">
+            <img class="img-fluid" src="./public/examples/albedo_layers.png">
           </div>
           <figcaption>
             Left: the foam texture image. Right: The layered texture using lighten between the foam texture image (white
@@ -223,7 +226,7 @@ cleanup: (gl) => {
       <div class="col-12 col-sm-4">
         <figure>
           <div class="d-flex">
-            <img class="img-fluid" src="./public/color_ramp.png">
+            <img class="img-fluid" src="./public/examples/color_ramp.png">
           </div>
           <figcaption>
             An example color ramp if we wanted to map the black pixels to our ocean color and the pure white to white,
@@ -253,9 +256,9 @@ cleanup: (gl) => {
       <div class="col-12 col-sm-6">
         <figure>
           <div class="d-flex multi-image">
-            <img class="img-fluid" src="./public/sea_raw.png">
-            <img class="img-fluid" src="./public/sea_shadow.png">
-            <img class="img-fluid" src="./public/sea_layered.png">
+            <img class="img-fluid" src="./public/examples/sea_raw.png">
+            <img class="img-fluid" src="./public/examples/sea_shadow.png">
+            <img class="img-fluid" src="./public/examples/sea_layered.png">
           </div>
           <figcaption>
             Left: The raw foam texture. Middle: The shadow foam lines and base color. Right: The two layers blended with
@@ -283,9 +286,9 @@ cleanup: (gl) => {
       <div class="col-12 col-sm-6">
         <figure>
           <div class="d-flex multi-image">
-            <img class="img-fluid" src="./public/wave_displacement.png">
-            <img class="img-fluid" src="./public/wave_displacement2.png">
-            <img class="img-fluid" src="./public/albedo_layers_displacement.png">
+            <img class="img-fluid" src="./public/textures/wave_displacement.png">
+            <img class="img-fluid" src="./public/textures/wave_displacement2.png">
+            <img class="img-fluid" src="./public/examples/albedo_layers_displacement.png">
           </div>
           <figcaption>
             Left: My wave displacement map. Middle: Wind Waker displacement map. (appears to have one major sine wave
@@ -315,7 +318,7 @@ cleanup: (gl) => {
         </p>
       </section>
       <figure class="col-12 col-sm-4">
-        <img class="img-fluid" src="./public/mipmap.png">
+        <img class="img-fluid" src="./public/examples/mipmap.png">
         <figcaption>
           Mipmap shown in the <a href="https://www.youtube.com/watch?v=8NL9C05CYk">linked video</a>, note the
           foam fading away to pure black at low resolution.
@@ -345,6 +348,9 @@ mat4 T = translate3D(uPosition.x, yWave, uPosition.z);
       Textures are quite fun to work with...
     </p>
   </main>
+
+  <video id="sky-video-texture" src="./public/textures/sky.mp4" autoplay muted style="display:none" loop>
+  </video>
 </body>
 
 </html>

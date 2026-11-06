@@ -48,7 +48,7 @@ function updateScene(dt) {
   this.getMaterial(MATERIAL_SEA_COMPLETE).setTextureExtraUniform(
     TexturedMaterial.TEXTURE_TYPE_DISPLACEMENT,
     "uDisplacementV",
-    scene.time / 30000,
+    scene.time / 45000,
   );
 }
 

@@ -6,6 +6,11 @@ import {
 } from "PotatoEngine/src/materials";
 import { rgb } from "PotatoEngine/src/util/color";
 import { PhongShaderProgram } from "PotatoEngine/src/shaders";
+import {
+  ambientOnly,
+  metallic,
+  vertColor,
+} from "PotatoEngine/src/materials/common";
 
 export const SHADER_PROGRAM_PHONG = "phong";
 export const SHADER_PROGRAM_WATER = "phong_water";
@@ -19,6 +24,12 @@ export const TEXTURE_SEA = "sea";
 export const TEXTURE_SEA_DISPLACEMENT = "sea_displacement";
 export const TEXTURE_FOAM_COLOR_RAMP = "foam_color_ramp";
 
+export const TEXTURE_SKY = "sky";
+
+export const MATERIAL_AMBIENT_ONLY = "ambient";
+export const MATERIAL_FLAT = "flat";
+export const MATERIAL_SHINY = "shiny";
+
 export const MATERIAL_SHIP = "ship";
 export const MATERIAL_STONE = "stone";
 export const MATERIAL_SAND = "sand";
@@ -27,6 +38,8 @@ export const MATERIAL_SEA_RAW = "sea_raw";
 export const MATERIAL_SEA_BACKGROUND = "sea_shadow";
 export const MATERIAL_SEA_LAYERED = "sea_layered";
 export const MATERIAL_SEA_DISPLACEMENT = "sea_displacement";
+
+export const MATERIAL_SKY = "sky";
 
 export const SEA_MATERIAL_LIST = [
   MATERIAL_SEA_COMPLETE,
@@ -43,6 +56,8 @@ export const colors = {
   wood: rgb(218, 109, 66),
   water: rgb(1, 113, 187),
   waterDark: rgb(0, 100, 167),
+  waterNight: undefined,
+  waterNightDark: undefined,
 };
 
 /**
@@ -72,31 +87,37 @@ export function addShaders(scene) {
 export function addTextures(scene) {
   scene.createTexture(
     TEXTURE_SEA_DISPLACEMENT,
-    "./public/wave_displacement2.png",
+    "./public/textures/wave_displacement2.png",
   );
-  scene.createTexture(TEXTURE_SEA, "./public/sea.png", {
+  scene.createTexture(TEXTURE_SEA, "./public/textures/sea.png", {
     wrapS: true,
     wrapT: true,
   });
-  scene.createTexture(TEXTURE_STONE, "./public/stone.png");
-  scene.createTexture(TEXTURE_STONE_NORMAL, "./public/stone_normal.png");
-  scene.createTexture(TEXTURE_SAND, "./public/sand.jpg");
-  scene.createTexture(TEXTURE_SAND_NORMAL, "./public/sand_normalmap.jpg");
-  scene.createTexture(TEXTURE_SHIP, "./public/Txa_kaizoku.png");
-  
+  scene.createTexture(TEXTURE_STONE, "./public/textures/stone.png");
+  scene.createTexture(
+    TEXTURE_STONE_NORMAL,
+    "./public/textures/stone_normal.png",
+  );
+  scene.createTexture(TEXTURE_SAND, "./public/textures/sand.jpg");
+  scene.createTexture(
+    TEXTURE_SAND_NORMAL,
+    "./public/textures/sand_normalmap.jpg",
+  );
+  scene.createTexture(TEXTURE_SHIP, "./public/textures/pirate-ship.png");
+
   scene.addTexture(
     TEXTURE_FOAM_COLOR_RAMP,
     new TextureColorRamp(scene.gl, colors.water, colors.waterDark),
   );
 
-  // if (window.location.host == "localhost:8080") {
-  //   document.getElementById("test-video-texture").src =
-  //     "./assets/hw4-preview.mp4";
-  // }
-  // scene.createTexture("video", document.getElementById("test-video-texture"), {
-  //   upload: true,
-  //   animated: true,
-  // });
+  scene.createTexture(
+    TEXTURE_SKY,
+    document.getElementById("sky-video-texture"),
+    {
+      upload: true,
+      animated: true,
+    },
+  );
 }
 
 /**
@@ -104,24 +125,34 @@ export function addTextures(scene) {
  * @param {Scene} scene
  */
 export function addMaterials(scene) {
+  // phong mats
+  scene.addMaterial(ambientOnly(MATERIAL_AMBIENT_ONLY), SHADER_PROGRAM_PHONG);
+  scene.addMaterial(ambientOnly(MATERIAL_AMBIENT_ONLY), SHADER_PROGRAM_WATER);
+  scene.addMaterial(vertColor(MATERIAL_FLAT), SHADER_PROGRAM_PHONG);
+  scene.addMaterial(
+    metallic(MATERIAL_SHINY, rgb(255, 255, 255)),
+    SHADER_PROGRAM_PHONG,
+  );
+
+  // texture mats
   const sea = new TexturedMaterial(MATERIAL_SEA_COMPLETE, {
     [TexturedMaterial.TEXTURE_TYPE_ALBEDO]: {
       textureLabel: TEXTURE_SEA,
       extraUniforms: {
-        [TexturedMaterial.U_TILE]: [7, 7],
+        [TexturedMaterial.U_TILE]: [7 * 1.5, 7 * 1.5],
       },
     },
     [TexturedMaterial.TEXTURE_TYPE_ALBEDO2]: {
       textureLabel: TEXTURE_SEA,
       extraUniforms: {
-        [TexturedMaterial.U_TILE]: [12, 12],
+        [TexturedMaterial.U_TILE]: [12 * 1.5, 12 * 1.5],
       },
     },
     [TexturedMaterial.TEXTURE_TYPE_DISPLACEMENT]: {
       textureLabel: TEXTURE_SEA_DISPLACEMENT,
       extraUniforms: {
         uDisplacementStrength: 0.1,
-        [TexturedMaterial.U_TILE]: [3, 3],
+        [TexturedMaterial.U_TILE]: [3 * 1.5, 3 * 1.5 * 1.5],
       },
     },
     [TexturedMaterial.TEXTURE_TYPE_COLOR_RAMP]: {
@@ -133,7 +164,7 @@ export function addMaterials(scene) {
     [TexturedMaterial.TEXTURE_TYPE_ALBEDO]: {
       textureLabel: TEXTURE_SEA,
       extraUniforms: {
-        [TexturedMaterial.U_TILE]: [12, 12],
+        [TexturedMaterial.U_TILE]: [12 * 1.5, 12 * 1.5],
       },
     },
   });
@@ -142,7 +173,7 @@ export function addMaterials(scene) {
     [TexturedMaterial.TEXTURE_TYPE_ALBEDO]: {
       textureLabel: TEXTURE_SEA,
       extraUniforms: {
-        [TexturedMaterial.U_TILE]: [7, 7],
+        [TexturedMaterial.U_TILE]: [7 * 1.5, 7 * 1.5],
       },
     },
     [TexturedMaterial.TEXTURE_TYPE_COLOR_RAMP]: {
@@ -154,13 +185,13 @@ export function addMaterials(scene) {
     [TexturedMaterial.TEXTURE_TYPE_ALBEDO]: {
       textureLabel: TEXTURE_SEA,
       extraUniforms: {
-        [TexturedMaterial.U_TILE]: [7, 7],
+        [TexturedMaterial.U_TILE]: [7 * 1.5, 7 * 1.5],
       },
     },
     [TexturedMaterial.TEXTURE_TYPE_ALBEDO2]: {
       textureLabel: TEXTURE_SEA,
       extraUniforms: {
-        [TexturedMaterial.U_TILE]: [12, 12],
+        [TexturedMaterial.U_TILE]: [12 * 1.5, 12 * 1.5],
       },
     },
     [TexturedMaterial.TEXTURE_TYPE_COLOR_RAMP]: {
@@ -172,8 +203,8 @@ export function addMaterials(scene) {
     [TexturedMaterial.TEXTURE_TYPE_ALBEDO]: {
       textureLabel: TEXTURE_SEA_DISPLACEMENT,
       extraUniforms: {
-        uDisplacementStrength: 0.3,
-        [TexturedMaterial.U_TILE]: [3, 3],
+        uDisplacementStrength: 0.1,
+        [TexturedMaterial.U_TILE]: [3 * 1.5, 3 * 1.5],
       },
     },
   });
@@ -182,14 +213,14 @@ export function addMaterials(scene) {
     [TexturedMaterial.TEXTURE_TYPE_ALBEDO]: {
       textureLabel: TEXTURE_STONE,
       extraUniforms: {
-        [TexturedMaterial.U_TILE]: [3, 3],
+        [TexturedMaterial.U_TILE]: [3 * 1.5, 3 * 1.5],
       },
     },
     [TexturedMaterial.TEXTURE_TYPE_NORMAL]: {
       textureLabel: TEXTURE_STONE_NORMAL,
       extraUniforms: {
         [TexturedMaterial.U_NORMAL_SCALE]: -0.5,
-        [TexturedMaterial.U_TILE]: [3, 3],
+        [TexturedMaterial.U_TILE]: [3 * 1.5, 3 * 1.5],
       },
     },
   });
@@ -198,23 +229,28 @@ export function addMaterials(scene) {
     [TexturedMaterial.TEXTURE_TYPE_ALBEDO]: {
       textureLabel: TEXTURE_SAND,
       extraUniforms: {
-        [TexturedMaterial.U_TILE]: [16,16],
+        [TexturedMaterial.U_TILE]: [16, 16],
       },
     },
     [TexturedMaterial.TEXTURE_TYPE_NORMAL]: {
       textureLabel: TEXTURE_SAND_NORMAL,
       extraUniforms: {
         [TexturedMaterial.U_NORMAL_SCALE]: 1,
-        [TexturedMaterial.U_TILE]: [16,16],
+        [TexturedMaterial.U_TILE]: [16, 16],
       },
     },
   });
 
-
   const ship = new TexturedMaterial(MATERIAL_SHIP, {
     [TexturedMaterial.TEXTURE_TYPE_ALBEDO]: {
       textureLabel: TEXTURE_SHIP,
-    }
+    },
+  });
+
+  const sky = new TexturedMaterial(MATERIAL_SKY, {
+    [TexturedMaterial.TEXTURE_TYPE_ALBEDO]: {
+      textureLabel: TEXTURE_SKY,
+    },
   });
 
   scene.addMaterial(sea, SHADER_PROGRAM_WATER);
@@ -226,4 +262,5 @@ export function addMaterials(scene) {
   scene.addMaterial(stone, SHADER_PROGRAM_PHONG);
   scene.addMaterial(sand, SHADER_PROGRAM_PHONG);
   scene.addMaterial(ship, SHADER_PROGRAM_PHONG);
+  scene.addMaterial(sky, SHADER_PROGRAM_PHONG);
 }
