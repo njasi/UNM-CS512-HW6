@@ -9,6 +9,7 @@ module.exports = {
     publicPath: "/dist/",
   },
   devServer: {
+    
     static: {
       directory: path.resolve(__dirname),
       watch: {
