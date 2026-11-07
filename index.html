@@ -72,7 +72,7 @@
   <main>
     <h1>HW 6: Wind Waker Water <small>(Texture Mapping)</small></h1>
     <div class="row sourcecode">
-      <a class = "col-12 col-md-6" href="https://github.com/njasi/UNM-CS512-HW6">
+      <a class="col-12 col-md-6" href="https://github.com/njasi/UNM-CS512-HW6">
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-github"
           viewBox="0 0 16 16">
           <path
@@ -81,7 +81,8 @@
         HW6 Source
       </a>
 
-      <a class = "col-12 col-md-6"  href="https://github.com/njasi/UNM-CS512-PotatoEngine/tree/5a373dce71b0b39fb6a7542ff89575fdf4e9bf67">
+      <a class="col-12 col-md-6"
+        href="https://github.com/njasi/UNM-CS512-PotatoEngine/tree/5a373dce71b0b39fb6a7542ff89575fdf4e9bf67">
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-github"
           viewBox="0 0 16 16">
           <path
@@ -203,7 +204,8 @@ cleanup: (gl) => {
           First let us think about the main albedo (color) texture map for the ocean surface material. The Wind Waker
           has a singular foam texture consisting of a grayscale tillable cell like structure. One could implement a
           similar texture as a procedural material using cellular noise; In fact I tried this at first but it didn't
-          look quite as good. The original image consists of 16 shades from white to black.
+          look quite as good. The original image from the game consists of 16 shades from white to black, and uses
+          combination of color mapping/ramping, layering and displacement to create the final texture.
         </p>
       </section>
       <div class="col-12 col-md-4">
@@ -227,18 +229,25 @@ cleanup: (gl) => {
           texture is used to map the grayscale values to rgb values. A color ramp texture generally consists of a strip
           of pixels 1 pixel tall and as wide as the highest value of your grayscale image (256 pixels wide in our case).
           When rendering the grayscale texture the shader can then look up the rgb color corresponding to the grayscale
-          value (sometimes this value is only in one channel, generally the .r channel it seems, but in our case with
-          normal rgb texture images it is common to use the <a
-            href="https://en.wikipedia.org/wiki/Grayscale#Luma_coding_in_video_systems">luminance</a> instead.). In The
-          Wind Waker this ramp consists of 16 shades going from a dark ocean color to the main ocean color. Different
+          value. Sometimes this value is only in one channel (or a single channel image format), generally the .r
+          channel
+          it seems, but in our case with normal rgb texture images it is common to use the <a
+            href="https://en.wikipedia.org/wiki/Grayscale#Luma_coding_in_video_systems">luminance</a> value to map to
+          the color ramp instead. In The Wind Waker this ramp consists of 16 shades going from a dark ocean color to the
+          main ocean color, corresponding to the 16 shades of black to white in the foam texture. Different
           times of day or weather will change this color ramp at runtime allowing a more dynamic environment. This is
-          especially important ads the water itself is not subject to lighting effects in the same way as other objects
-          are. I've emulated this setup with a <a
+          especially important as the water itself is not subject to lighting effects in the same way as other objects
+          are. Consider smooth shading on what should be a wavy water surface, this would look odd and force the idea
+          that the water is a solid object (even more than it already is with the cartoon style). So in the scene above
+          the water material has only albedo lighting contribution. Then to make the water appear darker in the night
+          environment we use a <a
             href="https://github.com/njasi/UNM-CS512-PotatoEngine/blob/main/src/materials/TextureColorRamp.js">color
-            ramp texture that can be easily updated</a> based on the colors at the start and end of the gradient. Now
-          something interesting here is that a color ramp does not need to be a gradient, you could assign completely
-          random color palettes if you wanted. Although the structure is different this is the essence of color pallets
-          in retro arcade games.</p>
+            ramp texture that can be easily updated</a> based on the colors at the start and end of the gradient
+          Therefore to make the water darker for nighttime, we simply make the color ramp gradient darker.
+          (I actually ended up defining a two color ramps to allow more control, one for the shadow layer and one for
+          the bright foam layer) An interesting point here is that a color map does not need to be a gradient, you could
+          assign completely random color palettes if you wanted. Although the structure is different this is the essence
+          of color pallets in many retro arcade games.</p>
       </section>
       <div class="col-12 col-md-4">
         <figure>
@@ -260,13 +269,13 @@ cleanup: (gl) => {
         <p>
           You may have noticed that the water texture actually has two instances of the foam pattern, one where the
           lines are all white and then a darker pattern of the same texture, scaled up a bit more. The white foam layer
-          is just our original grayscale texture layered on top of the shadow texture which is made with a color ramp
+          is our original grayscale texture layered on top of the shadow texture which is made with a color ramp
           assigning the darker blue to white pixels and the main water color to black. This layering or blending mode is
           called lighten, as we layer the textures on top of each other and we take the lightest color from the two for
           every texel. This is why we see no black in the final combined texture, it gets fully replaced with the
           brighter blue colors. Currently in my implementation I just have two albedo maps in the shader which can be
           combined (lighten only right now since thats all I needed here), but in an actual engine (based on the
-          hardware limitations) you may have an unlimited number of combinations...
+          hardware limitations) you may have an unlimited number of combinations allowing interesting materials.
         </p>
       </section>
       <div class="col-12 col-md-6">
@@ -320,14 +329,15 @@ cleanup: (gl) => {
     <div class="row">
       <section class="col-12 col-md-8">
         <p>
-          We covered automatic mipmapping in class which helps us save on compute power, but The Wind Waker leverages
-          this feature to achieve a fading effect for "free". In order to make the water texture fade away, low
-          resolution mipmap levels slowly become pure black without the foam texture, effectively fading it away in the
-          distance.
+          We covered automatic mipmapping in class which helps us save on compute power and reduce aliasing artifacts
+          , but The Wind Waker actually leverages mipmapping to achieve a distance based fading effect. In order to make
+          the water texture fade away, low resolution mipmap levels slowly become pure black without the foam texture,
+          effectively fading it away in the distance.
         </p>
         <p>
-          It's also worth noting that this mipmap fading effect is based on the resolution of the screen its being
-          rendered on as this changes when the smallest pure black maps will be used. This is noticeable if we change
+          It's also worth noting that this mipmap fading effect is based on the resolution of the screen it is being
+          rendered on as this changes when the smallest pure black textures will be used. This is noticeable if we
+          change
           the scale of the rendering canvas: a larger canvas will show patterns further into the distance than a smaller
           one.
         </p>
@@ -335,10 +345,11 @@ cleanup: (gl) => {
           This effect is a little hard to see in our scene above, but if you fly to one edge of the scene and look to
           the other side it is somewhat noticeable. You can also try flying high above the scene or changing your fov
           with <code>-</code> and <code>+</code> ( <code>0</code> to reset) until the mipmaps kick
-          in from the textures being small. Interestingly in my implementation the white foam layer fades away first and
+          in from the fov zoom effect. Interestingly in my implementation the white foam layer fades away first and
           then the shadow layer, this makes sense as the shadow layer repeats less times. However in the game they both
           fade out at about the same time from what I can tell. Perhaps their textures are closer in size or the repeat
-          mapping works different. You could also make more black mipmap levels for the larger shadow texture.
+          mapping works differently in the engine. You could also make more black mipmap levels for the larger shadow
+          texture.
         </p>
       </section>
       <div class="col-12 col-md-4">
