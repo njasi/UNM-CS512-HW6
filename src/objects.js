@@ -58,36 +58,37 @@ export function initSceneObjects(scene) {
   scene.addObject(seaObject, SHADER_PROGRAM_WATER);
 
   for (let i = 0; i < 15; i++) {
-    let stonePillar = generateNGonPrismObject(
-      OBJECT_STONE + "_" + i,
-      rgb(255, 255, 255),
-      Math.ceil(Math.random() * 3 + 5),
-      Math.random() * 4 + 1.5,
-      Math.random() * 20 + 3,
-    );
-    stonePillar.materialLabel = MATERIAL_STONE;
-    stonePillar.materialLabelSecondary = MATERIAL_SHINY;
+    let pillar = makePillar(OBJECT_STONE + "_" + i);
+    scene.addObject(pillar, SHADER_PROGRAM_PHONG);
+    let pillar2 = makePillar(OBJECT_STONE + "_back_" + i, 80);
+    scene.addObject(pillar2, SHADER_PROGRAM_PHONG);
+  }
 
-    stonePillar.rotation[0] = -Math.PI / 2;
-    stonePillar.rotation[2] = (Math.PI * (Math.random() - 0.5)) / 10;
-    stonePillar.rotation[1] = 2 * Math.PI * Math.random();
-    stonePillar.position = [
-      (Math.random() > 0.5 ? -1 : 1) * (30 * Math.random() + 10),
-      2,
-      Math.random() * -60 - 10,
-    ];
-    scene.addObject(stonePillar, SHADER_PROGRAM_PHONG);
+  for (let i = 0; i < 128; i++) {
+    let pillar = makePillar(OBJECT_STONE + "_circle_" + i);
+    pillar.position[0] = 50 * Math.sin((2 * Math.PI * i) / 64);
+    pillar.position[2] = 50 * Math.cos((2 * Math.PI * i) / 64);
+    scene.addObject(pillar, SHADER_PROGRAM_PHONG);
   }
 
   let beach = generateSphereObject(OBJECT_BEACH, rgb(255, 255, 255), 64, 50);
-  beach.position[0] = 25;
-  beach.position[1] = -34.2;
+  beach.position[0] = 40;
+  beach.position[1] = -33;
   beach.position[2] = -10;
   beach.scale[1] = 0.7;
   beach.materialLabel = MATERIAL_SAND;
   beach.materialLabelSecondary = MATERIAL_FLAT;
 
+  let beach2 = generateSphereObject(OBJECT_BEACH, rgb(255, 255, 255), 64, 50);
+  beach2.position[0] = 45;
+  beach2.position[1] = -34.5;
+  beach2.position[2] = 10;
+  beach2.scale[1] = 0.7;
+  beach2.materialLabel = MATERIAL_SAND;
+  beach2.materialLabelSecondary = MATERIAL_FLAT;
+
   scene.addObject(beach, SHADER_PROGRAM_PHONG);
+  scene.addObject(beach2, SHADER_PROGRAM_PHONG);
 
   const shipPrim = loadOBJ("pirate_ship");
   shipPrim.generateColors(rgb(255, 255, 255));
@@ -104,17 +105,53 @@ export function initSceneObjects(scene) {
   ship.snappedToWater = true;
   scene.addObject(ship, SHADER_PROGRAM_PHONG);
 
-  for (let i = 0; i < 10; i++) {
+  for (let i = 0; i < 15; i++) {
     const barrel = makeBarrel(OBJECT_BARREL + "_" + i);
     scene.addObject(barrel, SHADER_PROGRAM_PHONG, undefined, {
       addChildren: true,
     });
-  }
-
-  for (let i = 0; i < 10; i++) {
     const bouy = makeBuoy(OBJECT_BUOY + "_" + i);
     scene.addObject(bouy, SHADER_PROGRAM_PHONG);
   }
+}
+
+/**
+ * Generale a rock spire
+ * @param {string} label
+ */
+function makePillar(label, shift = 0) {
+  let stonePillar;
+
+  if (Math.random() > 0.5) {
+    stonePillar = generateNGonPrismObject(
+      label,
+      rgb(255, 255, 255),
+      Math.ceil(Math.random() * 3 + 5),
+      Math.random() * 4 + 1.5,
+      Math.random() * 20 + 5,
+    );
+  } else {
+    stonePillar = generateCylinderObject(
+      label,
+      rgb(255, 255, 255),
+      32,
+      Math.random() * 4 + 1.5,
+      Math.random() * 20 + 5,
+    );
+  }
+  stonePillar.materialLabel = MATERIAL_STONE;
+  stonePillar.materialLabelSecondary = MATERIAL_SHINY;
+
+  stonePillar.rotation[0] = -Math.PI / 2;
+  stonePillar.rotation[2] = (Math.PI * (Math.random() - 0.5)) / 10;
+  stonePillar.rotation[1] = 2 * Math.PI * Math.random();
+  stonePillar.position = [
+    (Math.random() > 0.5 ? -1 : 1) * (30 * Math.random() + 10),
+    2,
+    shift + Math.random() * -60 - 10,
+  ];
+
+  return stonePillar;
 }
 
 /**
@@ -146,7 +183,7 @@ function makeBarrel(label) {
   floatingBarrel.position = [
     Math.random() * 60 - 40,
     Math.random() * -20,
-    Math.random() * -30 - 10,
+    (Math.random() - 0.5) * 60,
   ];
   floatingBarrel.rotation = [
     Math.random() * 2 * Math.PI,
@@ -206,7 +243,7 @@ function makeBuoy(label) {
   floatingBuoy.position = [
     Math.random() * 80 - 40,
     Math.random() * -20,
-    Math.random() * -30 - 10,
+    (Math.random() - 0.5) * 60,
   ];
   floatingBuoy.rotation = [
     Math.random() * 2 * Math.PI,
