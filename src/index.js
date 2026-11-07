@@ -33,7 +33,7 @@ function updateScene(dt) {
   setEnvironmentColor(scene.time / 1000);
 
   if (scene.camera.doRotate) {
-    scene.camera.yaw += (Math.PI / 12) * dt;
+    scene.camera.yaw += (Math.PI / 18) * dt;
   }
 
   this.getMaterial(MATERIAL_SEA_COMPLETE).setTextureExtraUniform(
