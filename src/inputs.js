@@ -43,7 +43,6 @@ function attachRegenScene(scene) {
 
 function attachRotateCam(scene) {
   document.getElementById("rotate-cam").addEventListener("input", (event) => {
-    console.log(event.target.checked)
-    scene.camera.doRotate = event.target.value;
+    scene.camera.doRotate = event.target.checked;
   });
 }
