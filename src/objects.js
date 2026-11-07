@@ -1,12 +1,15 @@
 import {
+  colors,
   MATERIAL_AMBIENT_ONLY,
   MATERIAL_FLAT,
+  MATERIAL_METAL,
   MATERIAL_SAND,
   MATERIAL_SEA_COMPLETE,
   MATERIAL_SHINY,
   MATERIAL_SHIP,
   MATERIAL_SKY,
   MATERIAL_STONE,
+  MATERIAL_WOOD,
   SHADER_PROGRAM_PHONG,
   SHADER_PROGRAM_WATER,
 } from "./materials";
@@ -14,6 +17,8 @@ import {
 import { Scene } from "PotatoEngine";
 import {
   FloatingObject,
+  generateCylinder,
+  generateCylinderObject,
   generateGridObject,
   generateNGonPrismObject,
   generateSphereObject,
@@ -28,6 +33,8 @@ export const OBJECT_STONE = "stone";
 export const OBJECT_BEACH = "beach";
 export const OBJECT_SKYBOX = "skybox";
 export const OBJECT_SHIP = "ship";
+export const OBJECT_BARREL = "barrel";
+
 /**
  * Setup the scene
  * @param {Scene} scene
@@ -81,7 +88,6 @@ export function initSceneObjects(scene) {
 
   const shipPrim = loadOBJ("pirate_ship");
   shipPrim.generateColors(rgb(255, 255, 255));
-  const shipParts = shipPrim.toTypedArray();
 
   const ship = shipPrim.toSceneObject(OBJECT_SHIP, FloatingObject, {
     waterFunction: waterLevel,
@@ -94,4 +100,72 @@ export function initSceneObjects(scene) {
   ship.rotation[1] = Math.PI / 3;
   ship.snappedToWater = true;
   scene.addObject(ship, SHADER_PROGRAM_PHONG);
+
+  for (let i = 0; i < 20; i++) {
+    const barrel = makeBarrel(OBJECT_BARREL + "_" + i);
+    scene.addObject(barrel, SHADER_PROGRAM_PHONG, undefined, {
+      addChildren: true,
+    });
+  }
+}
+
+/**
+ * Generate a simple floating barrel
+ * @param {string} label
+ * @returns
+ */
+function makeBarrel(label) {
+  const barrelPrim = generateCylinder(8, 0.75, 2, {
+    bulge: 0.25,
+    segments_h: 8,
+    prism: true,
+  });
+  barrelPrim.generateColors(rgb(255, 255, 255));
+
+  const floatingBarrel = barrelPrim.toSceneObject(
+    OBJECT_BARREL,
+    FloatingObject,
+    {
+      waterFunction: waterLevel,
+    },
+  );
+
+  floatingBarrel.materialLabel = MATERIAL_WOOD;
+  floatingBarrel.materialLabelSecondary = MATERIAL_FLAT;
+  floatingBarrel.snappedToWater = true;
+  floatingBarrel.label = label;
+
+  floatingBarrel.rotation[2] = Math.PI / 2;
+  floatingBarrel.position = [Math.random() * 80 - 40, 0, Math.random() * -30 - 10];
+
+  const strap = generateCylinderObject(
+    label + "_strap1",
+    colors.steel,
+    16,
+    0.9,
+    0.2,
+  );
+  strap.materialLabel = MATERIAL_METAL;
+  strap.materialLabelSecondary = MATERIAL_SHINY;
+  strap.position[2] = 0.7;
+
+  const strap2 = generateCylinderObject(
+    label + "_strap2",
+    colors.steel,
+    16,
+    0.9,
+    0.2,
+  );
+  strap2.materialLabel = MATERIAL_METAL;
+  strap.materialLabelSecondary = MATERIAL_SHINY;
+  strap2.position[2] = -0.7;
+
+  floatingBarrel.lightingCenter = undefined;
+  strap.lightingCenter = undefined;
+  strap2.lightingCenter = undefined;
+
+  floatingBarrel.addChild(strap);
+  floatingBarrel.addChild(strap2);
+
+  return floatingBarrel;
 }

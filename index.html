@@ -90,9 +90,9 @@
       Zelda: The Wind Waker".
       The stylized elements in this game have always been a favorite of mine, so I jumped at the chance presented here.
     </p>
-    <p>
+    <!-- <p>
       Additionally I (plan on) implementing a shadow render pass setup to achieve simple shadows without raytracing.
-    </p>
+    </p> -->
     <div id="demo">
       <div class="canvas-wrapper" style="display: flex; justify-content: center">
         <canvas id="glcanvas" width="1600" height="900"></canvas>
@@ -132,7 +132,7 @@
       </li>
     </ul>
 
-    <h2>What are render passes?</h2>
+    <!-- <h2>What are render passes?</h2>
     <p>
       Essentially render passes group objects based on their rendering properties, for example objects could be grouped
       into transparent and opaque (although this can easily be achieved in the same shader with alpha values).
@@ -162,7 +162,7 @@ cleanup: (gl) => {
       depth map and does get a shadow, but anything behind it (from the perspective of the light) is not in the depth
       mask so it gets a shadow cast onto it. <code>(TODO remove after implementation: This is how it should work in
       theory but I've been struggling to implement it)</code>
-    </p>
+    </p> -->
     <h2>How does the water material work?</h2>
     <p>
       A short breakdown of how the process works in The Wind Waker is provided in this video:
@@ -192,7 +192,7 @@ cleanup: (gl) => {
       <div class="col-12 col-sm-4">
         <figure>
           <div class="d-flex multi-image">
-            <img class="img-fluid" src="./public/examples/sea.png">
+            <img class="img-fluid" src="./public/textures/sea.png">
             <img class="img-fluid" src="./public/examples/albedo_layers.png">
           </div>
           <figcaption>

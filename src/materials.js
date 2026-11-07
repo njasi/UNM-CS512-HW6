@@ -21,6 +21,9 @@ export const TEXTURE_STONE = "stone";
 export const TEXTURE_STONE_NORMAL = "stone_normal";
 export const TEXTURE_SAND = "sand";
 export const TEXTURE_SAND_NORMAL = "sand_normal";
+export const TEXTURE_WOOD = "wood";
+export const TEXTURE_WOOD_BUMP = "wood_bump";
+export const TEXTURE_METAL_BUMP = "metal_bump";
 export const TEXTURE_SEA = "sea";
 export const TEXTURE_SEA_DISPLACEMENT = "sea_displacement";
 export const TEXTURE_FOAM_COLOR_RAMP = "foam_color_ramp";
@@ -32,9 +35,11 @@ export const MATERIAL_AMBIENT_ONLY = "ambient";
 export const MATERIAL_FLAT = "flat";
 export const MATERIAL_SHINY = "shiny";
 
+export const MATERIAL_METAL = "metal";
 export const MATERIAL_SHIP = "ship";
 export const MATERIAL_STONE = "stone";
 export const MATERIAL_SAND = "sand";
+export const MATERIAL_WOOD = "wood";
 export const MATERIAL_SEA_COMPLETE = "sea_complete";
 export const MATERIAL_SEA_RAW = "sea_raw";
 export const MATERIAL_SEA_BACKGROUND = "sea_shadow";
@@ -112,6 +117,9 @@ export function addTextures(scene) {
     TEXTURE_SAND_NORMAL,
     "./public/textures/sand_normalmap.jpg",
   );
+  scene.createTexture(TEXTURE_WOOD, "./public/textures/wood.png");
+  scene.createTexture(TEXTURE_WOOD_BUMP, "./public/textures/wood_bump.png");
+  scene.createTexture(TEXTURE_METAL_BUMP, "./public/textures/metal_bump.png");
   scene.createTexture(TEXTURE_SHIP, "./public/textures/pirate-ship.png");
   scene.createTexture(
     TEXTURE_SKY,
@@ -264,6 +272,32 @@ export function addMaterials(scene) {
     },
   });
 
+  const woodMaterial = new TexturedMaterial(MATERIAL_WOOD, {
+    [TexturedMaterial.TEXTURE_TYPE_ALBEDO]: {
+      textureLabel: TEXTURE_WOOD,
+      extraUniforms: {
+        [TexturedMaterial.U_TILE]: [3, 3],
+      },
+    },
+    [TexturedMaterial.TEXTURE_TYPE_BUMP]: {
+      textureLabel: TEXTURE_WOOD_BUMP,
+      extraUniforms: {
+        [TexturedMaterial.U_BUMP_SCALE]: 5,
+        [TexturedMaterial.U_TILE]: [3, 3],
+      },
+    },
+  });
+  
+  const metalMaterial = new TexturedMaterial(MATERIAL_METAL, {
+    [TexturedMaterial.TEXTURE_TYPE_BUMP]: {
+      textureLabel: TEXTURE_METAL_BUMP,
+      extraUniforms: {
+        [TexturedMaterial.U_BUMP_SCALE]: 5,
+        [TexturedMaterial.U_TILE]: [3, 1],
+      },
+    },
+  });
+
   const ship = new TexturedMaterial(MATERIAL_SHIP, {
     [TexturedMaterial.TEXTURE_TYPE_ALBEDO]: {
       textureLabel: TEXTURE_SHIP,
@@ -284,6 +318,8 @@ export function addMaterials(scene) {
 
   scene.addMaterial(stone, SHADER_PROGRAM_PHONG);
   scene.addMaterial(sand, SHADER_PROGRAM_PHONG);
+  scene.addMaterial(woodMaterial, SHADER_PROGRAM_PHONG);
+  scene.addMaterial(metalMaterial, SHADER_PROGRAM_PHONG);
   scene.addMaterial(ship, SHADER_PROGRAM_PHONG);
   scene.addMaterial(sky, SHADER_PROGRAM_PHONG);
 }

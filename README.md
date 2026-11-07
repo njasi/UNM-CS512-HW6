@@ -9,18 +9,18 @@ In this assignment, you are expected to create objects with texture mapping. You
 1. Texture Mapping on Different Objects (6 pts)
 
     - [x] Implement at least 3 new geometric primitives with textures (you can use the existing brick texture or any texture you like) on them, including at least 2 curved primitives (choose from **cone**, **sphere**, **torus**).
-        - Implemented tangents & texCoords for: cone, sphere, torus, grid (plane)
-        - TODO: cylinder, ngonprisms
+        - Implemented tangents & texCoords for: cone, sphere, torus, grid (plane), cylinder, ngonprisms
 
 2. Textures with Animations (2pts)
-    - [ ] At least one of the textures has animation (e.g. GIF, video) (can be one of the above three textures)
-        - This is implemented, but I'm not sure where to put it in my HW6 scene.
+    - [x] At least one of the textures has animation (e.g. GIF, video) (can be one of the above three textures)
+        - Skybox sphere is animated
 
 3. Bump/Normal Mapping (4pts)
-    - [o] Implement at least one additional normal mapping (you can use the existing brick texture or any texture you like, it can be one of the three objects in task 1)
+    - [x] Implement at least one additional normal mapping (you can use the existing brick texture or any texture you like, it can be one of the three objects in task 1)
+        - normal maps are on the beach sphere and the stone pillars
     - [o] Implement at least one additional bump mapping (you can use the existing brick texture or any texture you like, it can be one of the three objects in task 1)
     
-    These are both implemented for all textured primitives, but i need to place them into the scene.
+    - NOTE: tangents are implemented for all textured primitives, and objects can all have normal or bump maps
 
 4. Creativity and Design (+1 bonus pt)
 
