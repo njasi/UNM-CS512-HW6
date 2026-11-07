@@ -181,7 +181,7 @@ cleanup: (gl) => {
       noted some sine wave offset calculations.
     </p>
     <div class="row">
-      <section class="col-12 col-sm-8">
+      <section class="col-12 col-md-8">
         <h3>
           Where is the water foam texture from?
         </h3>
@@ -197,7 +197,7 @@ cleanup: (gl) => {
           look quite as good. The original image consists of 16 shades from white to black.
         </p>
       </section>
-      <div class="col-12 col-sm-4">
+      <div class="col-12 col-md-4">
         <figure>
           <div class="d-flex multi-image">
             <img class="img-fluid" src="./public/textures/sea.png">
@@ -212,7 +212,7 @@ cleanup: (gl) => {
     </div>
     <h4>Color Ramping</h4>
     <div class="row">
-      <section class="col-12 col-sm-8">
+      <section class="col-12 col-md-8">
         <p>
           Now in most scenes we would not be happy with our completely black and white water texture, so a color ramp
           texture is used to map the grayscale values to rgb values. A color ramp texture generally consists of a strip
@@ -231,7 +231,7 @@ cleanup: (gl) => {
           random color palettes if you wanted. Although the structure is different this is the essence of color pallets
           in retro arcade games.</p>
       </section>
-      <div class="col-12 col-sm-4">
+      <div class="col-12 col-md-4">
         <figure>
           <div class="d-flex">
             <img class="img-fluid" src="./public/examples/color_ramp.png">
@@ -249,7 +249,7 @@ cleanup: (gl) => {
 
       <h4>Layering</h4>
       <p>
-      <section class="col-12 col-sm-6">
+      <section class="col-12 col-md-6">
         You may have noticed that the water texture actually has two instances of the foam pattern, one where the lines
         are all white and then a darker pattern of the same texture, scaled up a bit more. The white foam layer is just
         our original grayscale texture layered on top of the shadow texture which is made with a color ramp assigning
@@ -261,7 +261,7 @@ cleanup: (gl) => {
         may have an unlimited number of combinations...
         </p>
       </section>
-      <div class="col-12 col-sm-6">
+      <div class="col-12 col-md-6">
         <figure>
           <div class="d-flex multi-image">
             <img class="img-fluid" src="./public/examples/sea_raw.png">
@@ -277,7 +277,7 @@ cleanup: (gl) => {
     </div>
     <h3>Displacement Map</h3>
     <div class="row">
-      <section class="col-12 col-sm-6">
+      <section class="col-12 col-md-6">
         <p>
           The newly created layered albedo texture is now influenced by a displacement map. When a pixel in a
           displacement map is white the albedo texture UV is shifted up and to the right, when it is black the UV is
@@ -291,7 +291,7 @@ cleanup: (gl) => {
           additional noise into the texture or put a little more thought into the pattern later.
         </p>
       </section>
-      <div class="col-12 col-sm-6">
+      <div class="col-12 col-md-6">
         <figure>
           <div class="d-flex multi-image">
             <img class="img-fluid" src="./public/textures/wave_displacement.png">
@@ -310,8 +310,7 @@ cleanup: (gl) => {
 
     <h3>Mipmapping</h3>
     <div class="row">
-      <section class="col-12 col-sm-8">
-        <p>TODO finish the feature in potato engine</p>
+      <section class="col-12 col-md-8">
         <p>
           We covered automatic mipmapping in class which helps us save on compute power, but The Wind Waker leverages
           this feature to achieve a fading effect for "free". In order to make the water texture fade away low
@@ -324,14 +323,25 @@ cleanup: (gl) => {
           the scale of the rendering canvas: a larger canvas will show patterns further into the distance than a smaller
           one.
         </p>
+        <p>
+          This effect is a little hard to see in our scene above, but if you fly to one edge of the scene and look to
+          the other side it is somewhat noticeable. You can also try flying high above the scene or changing your fov
+          with <code>-</code> until the mipmaps kick
+          in from the textures being small. Interestingly in my implementation the white foam layer fades away first and
+          then the shadow layer, this makes sense as the shadow layer repeats less times. However in the game they both
+          fade out at about the same time from what I can tell. Perhaps their textures are closer in size or the repeat
+          mapping works different. You could also make more black mipmap levels for the larger shadow texture.
+        </p>
       </section>
-      <figure class="col-12 col-sm-4">
-        <img class="img-fluid" src="./public/examples/mipmap.png">
-        <figcaption>
-          Mipmap shown in the <a href="https://www.youtube.com/watch?v=8NL9C05CYk">linked video</a>, note the
-          foam fading away to pure black at low resolution.
-        </figcaption>
-      </figure>
+      <div class="col-12 col-md-4">
+        <figure>
+          <img class="img-fluid" src="./public/examples/mipmap.png">
+          <figcaption>
+            Mipmap shown in the <a href="https://www.youtube.com/watch?v=8NL9C05CYk">linked video</a>, note the
+            foam fading away to pure black at low resolution.
+          </figcaption>
+        </figure>
+      </div>
     </div>
 
     <h3>Vertex Shader</h3>

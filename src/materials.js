@@ -108,6 +108,7 @@ export function addTextures(scene) {
   scene.createTexture(TEXTURE_SEA, "./public/textures/sea.png", {
     wrapS: true,
     wrapT: true,
+    blackMipmaps: 4,
   });
   scene.createTexture(TEXTURE_STONE, "./public/textures/stone.png");
   scene.createTexture(
