@@ -1,6 +1,6 @@
 import { Scene } from "PotatoEngine";
 import { SEA_MATERIAL_LIST } from "./materials";
-import { OBJECT_SEA } from "./objects";
+import { initSceneObjects, OBJECT_SEA } from "./objects";
 
 /**
  * Attach all the event listeners & populate inputs
@@ -9,6 +9,7 @@ import { OBJECT_SEA } from "./objects";
 export function attachListeners(scene) {
   // TODO decide on interactivity with the scene
   attachSeaMaterialSelector(scene);
+  attachRegenScene(scene)
 }
 
 /**
@@ -30,5 +31,12 @@ function attachSeaMaterialSelector(scene) {
 
   seaMat.addEventListener("input", (event) => {
     seaObject.materialLabel = event.target.value
+  })
+}
+
+
+function attachRegenScene(scene){
+  document.getElementById("regen-scene").addEventListener("click", ()=>{
+    initSceneObjects(scene)
   })
 }

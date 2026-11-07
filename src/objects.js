@@ -43,6 +43,7 @@ export const OBJECT_BUOY = "buoy";
  * @param {Scene} scene
  */
 export function initSceneObjects(scene) {
+  scene.removeLight(OBJECT_SKYBOX);
   let skyBox = generateSphereObject(OBJECT_SKYBOX, rgb(255, 255, 255), 32, 60);
   skyBox.materialLabel = MATERIAL_SKY;
   skyBox.materialLabelSecondary = MATERIAL_AMBIENT_ONLY;
@@ -57,14 +58,17 @@ export function initSceneObjects(scene) {
   seaObject.position = [0, 0, 0];
   scene.addObject(seaObject, SHADER_PROGRAM_WATER);
 
-  for (let i = 0; i < 15; i++) {
+  for (let i = 0; i < 5; i++) {
+    scene.removeObject(OBJECT_STONE + "_" + i);
+    scene.removeObject(OBJECT_STONE + "_back_" + i);
     let pillar = makePillar(OBJECT_STONE + "_" + i);
-    scene.addObject(pillar, SHADER_PROGRAM_PHONG);
     let pillar2 = makePillar(OBJECT_STONE + "_back_" + i, 80);
+    scene.addObject(pillar, SHADER_PROGRAM_PHONG);
     scene.addObject(pillar2, SHADER_PROGRAM_PHONG);
   }
 
   for (let i = 0; i < 128; i++) {
+    scene.removeObject(OBJECT_STONE + "_circle_" + i);
     let pillar = makePillar(OBJECT_STONE + "_circle_" + i);
     pillar.position[0] = 50 * Math.sin((2 * Math.PI * i) / 64);
     pillar.position[2] = 50 * Math.cos((2 * Math.PI * i) / 64);
@@ -79,7 +83,12 @@ export function initSceneObjects(scene) {
   beach.materialLabel = MATERIAL_SAND;
   beach.materialLabelSecondary = MATERIAL_FLAT;
 
-  let beach2 = generateSphereObject(OBJECT_BEACH, rgb(255, 255, 255), 64, 50);
+  let beach2 = generateSphereObject(
+    OBJECT_BEACH + "1",
+    rgb(255, 255, 255),
+    64,
+    50,
+  );
   beach2.position[0] = 45;
   beach2.position[1] = -34.5;
   beach2.position[2] = 10;
@@ -87,6 +96,8 @@ export function initSceneObjects(scene) {
   beach2.materialLabel = MATERIAL_SAND;
   beach2.materialLabelSecondary = MATERIAL_FLAT;
 
+  scene.removeObject(OBJECT_BEACH);
+  scene.removeObject(OBJECT_BEACH + "1");
   scene.addObject(beach, SHADER_PROGRAM_PHONG);
   scene.addObject(beach2, SHADER_PROGRAM_PHONG);
 
@@ -103,14 +114,18 @@ export function initSceneObjects(scene) {
   ship.position = [0, -0.5, -30];
   ship.rotation[1] = Math.PI / 3;
   ship.snappedToWater = true;
+
+  scene.removeObject(OBJECT_SHIP);
   scene.addObject(ship, SHADER_PROGRAM_PHONG);
 
   for (let i = 0; i < 15; i++) {
+    scene.removeObject(OBJECT_BARREL + "_" + i, { removeChildren: true });
+    scene.removeObject(OBJECT_BUOY + "_" + i);
     const barrel = makeBarrel(OBJECT_BARREL + "_" + i);
+    const bouy = makeBuoy(OBJECT_BUOY + "_" + i);
     scene.addObject(barrel, SHADER_PROGRAM_PHONG, undefined, {
       addChildren: true,
     });
-    const bouy = makeBuoy(OBJECT_BUOY + "_" + i);
     scene.addObject(bouy, SHADER_PROGRAM_PHONG);
   }
 }
@@ -146,9 +161,9 @@ function makePillar(label, shift = 0) {
   stonePillar.rotation[2] = (Math.PI * (Math.random() - 0.5)) / 10;
   stonePillar.rotation[1] = 2 * Math.PI * Math.random();
   stonePillar.position = [
-    (Math.random() > 0.5 ? -1 : 1) * (30 * Math.random() + 10),
+    (Math.random() > 0.5 ? -1 : 1) * (20 * Math.random() + 10),
     2,
-    shift + Math.random() * -60 - 10,
+    shift + Math.random() * -20 - 10,
   ];
 
   return stonePillar;
