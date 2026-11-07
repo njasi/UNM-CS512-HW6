@@ -386,7 +386,8 @@ mat4 T = translate3D(uPosition.x, yWave, uPosition.z);
     </p>
   </main>
 
-  <video id="sky-video-texture" src="./public/textures/sky.mp4" autoplay muted style="display:none" loop>
+  <video id="sky-video-texture" autoplay loop muted playsinline style="display:none">
+    <source src="./public/textures/sky.mp4" type="video/mp4" />
   </video>
 </body>
 
