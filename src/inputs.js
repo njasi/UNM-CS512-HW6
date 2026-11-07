@@ -9,7 +9,8 @@ import { initSceneObjects, OBJECT_SEA } from "./objects";
 export function attachListeners(scene) {
   // TODO decide on interactivity with the scene
   attachSeaMaterialSelector(scene);
-  attachRegenScene(scene)
+  attachRegenScene(scene);
+  attachRotateCam(scene);
 }
 
 /**
@@ -30,13 +31,19 @@ function attachSeaMaterialSelector(scene) {
   }
 
   seaMat.addEventListener("input", (event) => {
-    seaObject.materialLabel = event.target.value
-  })
+    seaObject.materialLabel = event.target.value;
+  });
 }
 
+function attachRegenScene(scene) {
+  document.getElementById("regen-scene").addEventListener("click", () => {
+    initSceneObjects(scene);
+  });
+}
 
-function attachRegenScene(scene){
-  document.getElementById("regen-scene").addEventListener("click", ()=>{
-    initSceneObjects(scene)
-  })
+function attachRotateCam(scene) {
+  document.getElementById("rotate-cam").addEventListener("input", (event) => {
+    console.log(event.target.checked)
+    scene.camera.doRotate = event.target.value;
+  });
 }

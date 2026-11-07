@@ -18,6 +18,7 @@ import { addLights } from "./light";
 const scene = new Scene("glcanvas");
 scene.camera.move(0, -10, 0);
 scene.camera.pitch -= Math.PI / 12;
+scene.camera.doRotate = true;
 
 // setup controls & listeners
 controls.FlightControls.setupMouseControls(scene);
@@ -30,6 +31,10 @@ function updateScene(dt) {
   flightCb(dt);
 
   setEnvironmentColor(scene.time / 1000);
+
+  if (scene.camera.doRotate) {
+    scene.camera.yaw += (Math.PI / 12) * dt;
+  }
 
   this.getMaterial(MATERIAL_SEA_COMPLETE).setTextureExtraUniform(
     TexturedMaterial.TEXTURE_TYPE_DISPLACEMENT,
