@@ -83,15 +83,15 @@ let colorRampFoamTexture;
 export function addShaders(scene) {
   scene.createProgram(
     SHADER_PROGRAM_PHONG,
-    "../PotatoEngine/src/shaders/vertex/phongTextured.vert",
-    "../PotatoEngine/src/shaders/fragment/phongTextured.frag",
+    "./PotatoEngine/src/shaders/vertex/phongTextured.vert",
+    "./PotatoEngine/src/shaders/fragment/phongTextured.frag",
     PhongShaderProgram,
   );
 
   scene.createProgram(
     SHADER_PROGRAM_WATER,
     "./src/waterPhongTextured.vert",
-    "../PotatoEngine/src/shaders/fragment/phongTextured.frag",
+    "./PotatoEngine/src/shaders/fragment/phongTextured.frag",
     PhongShaderProgram,
   );
 }
