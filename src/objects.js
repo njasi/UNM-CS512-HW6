@@ -51,12 +51,18 @@ export function initSceneObjects(scene) {
   skyBox.rotation[1] = Math.PI;
   scene.addObject(skyBox, SHADER_PROGRAM_PHONG);
 
-  scene.removeObject(OBJECT_SEA);
-  let seaObject = generateGridObject(OBJECT_SEA, rgb(255, 255, 255), 200, 150);
-  seaObject.materialLabel = MATERIAL_SEA_COMPLETE;
-  seaObject.materialLabelSecondary = MATERIAL_AMBIENT_ONLY;
-  seaObject.position = [0, 0, 0];
-  scene.addObject(seaObject, SHADER_PROGRAM_WATER);
+  if (!scene.getObject(OBJECT_SEA)) {
+    let seaObject = generateGridObject(
+      OBJECT_SEA,
+      rgb(255, 255, 255),
+      200,
+      150,
+    );
+    seaObject.materialLabel = MATERIAL_SEA_COMPLETE;
+    seaObject.materialLabelSecondary = MATERIAL_AMBIENT_ONLY;
+    seaObject.position = [0, 0, 0];
+    scene.addObject(seaObject, SHADER_PROGRAM_WATER);
+  }
 
   for (let i = 0; i < 5; i++) {
     scene.removeObject(OBJECT_STONE + "_" + i);
@@ -70,8 +76,10 @@ export function initSceneObjects(scene) {
   for (let i = 0; i < 128; i++) {
     scene.removeObject(OBJECT_STONE + "_circle_" + i);
     let pillar = makePillar(OBJECT_STONE + "_circle_" + i);
-    pillar.position[0] = 50 * Math.sin((2 * Math.PI * i) / 64);
-    pillar.position[2] = 50 * Math.cos((2 * Math.PI * i) / 64);
+    pillar.position[0] =
+      50 * Math.sin((2 * Math.PI * i) / 64) + Math.random() * 2 - 1;
+    pillar.position[2] =
+      50 * Math.cos((2 * Math.PI * i) / 64) + Math.random() * 2 - 1;
     scene.addObject(pillar, SHADER_PROGRAM_PHONG);
   }
 
