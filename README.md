@@ -8,8 +8,8 @@ In this assignment, you are expected to create objects with texture mapping. You
 
 1. Texture Mapping on Different Objects (6 pts)
 
-    - [x] Implement at least 3 new geometric primitives with textures (you can use the existing brick texture or any texture you like) on them, including at least 2 curved primitives (choose from **cone**, **sphere**, **torus**).
-        - Implemented tangents & texCoords for: cone, sphere, torus, grid (plane), cylinder, ngonprisms
+    - [x] Implement at least 3 new geometric primitives with textures (you can use the existing brick texture or any texture you like) on them, including at least 2 curved primitives (choose from cone, sphere, torus).
+        - Implemented tangents & texCoords for (bold = in scene): cone, **sphere**, **torus**, **grid (plane)**, cube, cylinder, **ngonprisms**, **bulging ngonprisms** (barrels)
 
 2. Textures with Animations (2pts)
     - [x] At least one of the textures has animation (e.g. GIF, video) (can be one of the above three textures)
@@ -18,8 +18,8 @@ In this assignment, you are expected to create objects with texture mapping. You
 3. Bump/Normal Mapping (4pts)
     - [x] Implement at least one additional normal mapping (you can use the existing brick texture or any texture you like, it can be one of the three objects in task 1)
         - normal maps are on the beach sphere and the stone pillars
-    - [o] Implement at least one additional bump mapping (you can use the existing brick texture or any texture you like, it can be one of the three objects in task 1)
-    
+    - [x] Implement at least one additional bump mapping (you can use the existing brick texture or any texture you like, it can be one of the three objects in task 1)
+        - bump maps are applied to the wood texture and metal texture on barrels
     - NOTE: tangents are implemented for all textured primitives, and objects can all have normal or bump maps
 
 4. Creativity and Design (+1 bonus pt)

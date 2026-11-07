@@ -17,6 +17,7 @@ export const SHADER_PROGRAM_PHONG = "phong";
 export const SHADER_PROGRAM_WATER = "phong_water";
 
 export const TEXTURE_SHIP = "ship";
+export const TEXTURE_BUOY = "buoy";
 export const TEXTURE_STONE = "stone";
 export const TEXTURE_STONE_NORMAL = "stone_normal";
 export const TEXTURE_SAND = "sand";
@@ -37,6 +38,7 @@ export const MATERIAL_SHINY = "shiny";
 
 export const MATERIAL_METAL = "metal";
 export const MATERIAL_SHIP = "ship";
+export const MATERIAL_BUOY = "buoy";
 export const MATERIAL_STONE = "stone";
 export const MATERIAL_SAND = "sand";
 export const MATERIAL_WOOD = "wood";
@@ -120,6 +122,7 @@ export function addTextures(scene) {
   scene.createTexture(TEXTURE_WOOD, "./public/textures/wood.png");
   scene.createTexture(TEXTURE_WOOD_BUMP, "./public/textures/wood_bump.png");
   scene.createTexture(TEXTURE_METAL_BUMP, "./public/textures/metal_bump.png");
+  scene.createTexture(TEXTURE_BUOY, "./public/textures/buoy.png");
   scene.createTexture(TEXTURE_SHIP, "./public/textures/pirate-ship.png");
   scene.createTexture(
     TEXTURE_SKY,
@@ -287,7 +290,7 @@ export function addMaterials(scene) {
       },
     },
   });
-  
+
   const metalMaterial = new TexturedMaterial(MATERIAL_METAL, {
     [TexturedMaterial.TEXTURE_TYPE_BUMP]: {
       textureLabel: TEXTURE_METAL_BUMP,
@@ -301,6 +304,15 @@ export function addMaterials(scene) {
   const ship = new TexturedMaterial(MATERIAL_SHIP, {
     [TexturedMaterial.TEXTURE_TYPE_ALBEDO]: {
       textureLabel: TEXTURE_SHIP,
+    },
+  });
+
+  const buoy = new TexturedMaterial(MATERIAL_BUOY, {
+    [TexturedMaterial.TEXTURE_TYPE_ALBEDO]: {
+      textureLabel: TEXTURE_BUOY,
+      extraUniforms: {
+        [TexturedMaterial.U_TILE]: [2, 1],
+      },
     },
   });
 
@@ -320,6 +332,7 @@ export function addMaterials(scene) {
   scene.addMaterial(sand, SHADER_PROGRAM_PHONG);
   scene.addMaterial(woodMaterial, SHADER_PROGRAM_PHONG);
   scene.addMaterial(metalMaterial, SHADER_PROGRAM_PHONG);
+  scene.addMaterial(buoy, SHADER_PROGRAM_PHONG);
   scene.addMaterial(ship, SHADER_PROGRAM_PHONG);
   scene.addMaterial(sky, SHADER_PROGRAM_PHONG);
 }
