@@ -71,6 +71,8 @@ export const colors = {
   waterFoamNight: rgb(1, 111, 160),
   globalLightDay: rgb(244, 233, 155),
   globalLightNight: rgb(255, 248, 222),
+  greenRupee: rgb(1, 173, 3),
+  blueRupee: rgb(0, 94, 192),
 };
 
 let colorRampTexture;

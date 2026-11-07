@@ -18,6 +18,9 @@ import {
 import { Scene } from "PotatoEngine";
 import {
   FloatingObject,
+  generateConeObject,
+  generateCube,
+  generateCubeObject,
   generateCylinder,
   generateCylinderObject,
   generateGridObject,
@@ -29,6 +32,11 @@ import {
 import { generateOBJObject, loadOBJ } from "PotatoEngine/src/objects/loaders";
 import { rgb } from "PotatoEngine/src/util/color";
 import { waterLevel } from "./water";
+import {
+  mat4Identity,
+  mat4RotateZ,
+  transformVertices,
+} from "PotatoEngine/src/util/transformations";
 
 export const OBJECT_SEA = "seaObject";
 export const OBJECT_STONE = "stone";
@@ -37,6 +45,7 @@ export const OBJECT_SKYBOX = "skybox";
 export const OBJECT_SHIP = "ship";
 export const OBJECT_BARREL = "barrel";
 export const OBJECT_BUOY = "buoy";
+export const OBJECT_LOOKOUT = "lookout";
 
 /**
  * Setup the scene
@@ -136,6 +145,19 @@ export function initSceneObjects(scene) {
     });
     scene.addObject(bouy, SHADER_PROGRAM_PHONG);
   }
+
+  scene.removeObject(OBJECT_LOOKOUT, { removeChildren: true });
+  const lookout = makeLookout(OBJECT_LOOKOUT)
+  lookout.position[0] = -20;
+  lookout.position[2] = 2;
+  scene.addObject(
+    lookout,
+    SHADER_PROGRAM_PHONG,
+    undefined,
+    {
+      addChildren: true,
+    },
+  );
 }
 
 /**
@@ -276,4 +298,52 @@ function makeBuoy(label) {
   floatingBuoy.rotVelocity = [Math.random(), Math.random(), Math.random()];
 
   return floatingBuoy;
+}
+
+function makeLookout(label) {
+  const pillar = generateCylinderObject(label, rgb(255, 255, 255), 32, 1, 10, {
+    segments_h: 2,
+  });
+  pillar.materialLabel = MATERIAL_WOOD;
+  pillar.materialLabelSecondary = MATERIAL_FLAT;
+  pillar.rotation[0] = Math.PI / 2;
+
+  const platform = generateCubeObject(label + "_platform", rgb(255, 255, 255));
+  platform.scale = [3, 3, 0.25];
+  platform.position = [0, 0, -5];
+  platform.materialLabel = MATERIAL_WOOD;
+  platform.materialLabelSecondary = MATERIAL_FLAT;
+  pillar.addChild(platform);
+
+  for (let i = 0; i < 3; i++) {
+    for (let j = 0; j < 3; j++) {
+      let color = colors.greenRupee;
+      if(i == 1 && j ==1){
+        color = colors.blueRupee
+      }
+      const rupee = makeRupee(label + "_rupee", color);
+      rupee.position = [(i-1) * 1.5, (j-1) * 1.5, -6];
+      pillar.addChild(rupee);
+    }
+  }
+
+  return pillar;
+}
+
+function makeRupee(label, color = colors.greenRupee) {
+  const rupee = generateNGonPrismObject(label, color, 6, 0.5, 0.35, {
+    bulge: 0.5,
+  });
+  rupee.vertices = new Float32Array(
+    transformVertices(rupee.vertices, mat4RotateZ(mat4Identity(), Math.PI / 6)),
+  );
+  rupee.materialLabel = MATERIAL_SHINY;
+  rupee.rotation[0] = Math.PI / 2;
+  rupee.scale[0] = 0.5;
+
+  rupee.setUpdateCB(function (dt) {
+    this.rotation[2] += (dt * Math.PI) / 3;
+  });
+
+  return rupee;
 }
