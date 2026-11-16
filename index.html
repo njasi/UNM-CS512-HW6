@@ -108,25 +108,33 @@
       </div>
 
       <div class="controls">
-        <label>
-          Sea Material
-          <select id="sea-material-selector">
-            <option>Complete Sea</option>
-            <option>Raw Foam</option>
-            <option>Foam Shadow</option>
-            <option>Foam Layered</option>
-            <option>Displacement Map</option>
-          </select>
-        </label>
-        <label>
-          Rotate Camera
-          <input id="rotate-cam" type="checkbox" checked>
-        </label>
-        <label>
-          <button id="regen-scene">
-            Regenerate Scene
-          </button>
-        </label>
+
+        <div id="default-editor-controls">
+          <div class="controls mt-0">
+            <label>
+              Sea Material
+              <select id="sea-material-selector">
+                <option>Complete Sea</option>
+                <option>Raw Foam</option>
+                <option>Foam Shadow</option>
+                <option>Foam Layered</option>
+                <option>Displacement Map</option>
+              </select>
+            </label>
+            <label>
+              Rotate Camera
+              <input id="rotate-cam" type="checkbox" checked>
+            </label>
+            <label>
+              <button id="regen-scene">
+                Regenerate Scene
+              </button>
+            </label>
+          </div>
+        </div>
+        <div id="editor-panel-body">
+
+        </div>
       </div>
     </div>
     <p>Controls and some things to try <code>(new freecam like camera controls)</code>:</p>
