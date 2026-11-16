@@ -14,6 +14,7 @@ import controls from "PotatoEngine/src/controls";
 import { TexturedMaterial } from "PotatoEngine/src/materials";
 import { cacheOBJ } from "PotatoEngine/src/objects/loaders";
 import { addLights } from "./light";
+import { makeEditorTabs, syncProperties } from "PotatoEngine/src/controls/sceneEditor";
 
 const scene = new Scene("glcanvas");
 scene.camera.move(0, -10, 0);
@@ -61,8 +62,10 @@ async function main() {
   initSceneObjects(scene);
 
   attachListeners(scene);
+  makeEditorTabs(scene)
 
   setInterval(() => {
+    syncProperties()
     scene.render();
   }, 30);
 }
