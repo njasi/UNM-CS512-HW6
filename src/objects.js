@@ -321,7 +321,7 @@ function makeLookout(label) {
       if(i == 1 && j ==1){
         color = colors.blueRupee
       }
-      const rupee = makeRupee(label + "_rupee", color);
+      const rupee = makeRupee(label + `_rupee_${i}_${j}`, color);
       rupee.position = [(i-1) * 1.5, (j-1) * 1.5, -6];
       pillar.addChild(rupee);
     }
